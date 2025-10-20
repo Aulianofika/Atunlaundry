@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         $services = Service::where('is_active', true)->get();
-        $promotions = Promotion::active()->get();
+        $promotions = Promotion::orderBy('created_at', 'desc')->get();
         
         return view('home', compact('services', 'promotions'));
     }

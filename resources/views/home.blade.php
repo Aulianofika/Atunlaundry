@@ -113,7 +113,7 @@
         <div class="row g-4">
             @foreach($promotions as $promotion)
             <div class="col-lg-6">
-                <div class="card border-warning">
+                <div class="card border-warning shadow-sm">
                     <div class="card-header bg-warning text-dark">
                         <h5 class="mb-0">
                             <i class="fas fa-percentage me-2"></i>{{ $promotion->title }}

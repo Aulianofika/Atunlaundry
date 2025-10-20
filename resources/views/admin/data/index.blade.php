@@ -129,9 +129,6 @@
                     <h5 class="mb-0">
                         <i class="fas fa-clock me-2"></i>Pesanan Terbaru
                     </h5>
-                    <a href="{{ route('admin.data.orders') }}" class="btn btn-outline-primary btn-sm">
-                        View All Orders
-                    </a>
                 </div>
                 <div class="card-body p-0">
                     @if($recentOrders->count() > 0)

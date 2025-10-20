@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\PromotionController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -22,8 +23,12 @@ Route::get('/check-order', [OrderController::class, 'checkStatus'])->name('order
 
 // Protected routes
 Route::middleware('auth')->group(function () {
-   
+    // CRUD RESOURCE ROUTES
     Route::resource('services', ServiceController::class)->except(['show']);
+    Route::resource('orders', OrderController::class)->except(['show']);
+    Route::resource('promotions', PromotionController::class)->except(['show']);
+    // Route::resource('expenses', ExpenseController::class)->except(['show']);
+
 
     // User dashboard
     Route::get('/dashboard', [OrderController::class, 'index'])->name('dashboard');

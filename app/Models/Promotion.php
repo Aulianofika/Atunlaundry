@@ -32,8 +32,19 @@ class Promotion extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('is_active', true)
-                    ->where('start_date', '<=', now())
-                    ->where('end_date', '>=', now());
+        return $query
+        ->where(function ($q) {
+            $q->where('is_active', true)
+              ->orWhereNull('is_active');
+        })
+        ->where(function ($q) {
+            $q->where('start_date', '<=', now())
+              ->orWhereNull('start_date');
+        })
+        ->where(function ($q) {
+            $q->where('end_date', '>=', now())
+              ->orWhereNull('end_date');
+        });
+
     }
 }
