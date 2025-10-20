@@ -7,9 +7,9 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card">
-                <div class="card-header text-center">
+                <div class="card-header text-center" style="background: #9c85c7; color: white;">
                     <h4 class="mb-0">
-                        <i class="fas fa-user-plus me-2"></i>Buat Akun Baru
+                       Buat Akun Baru
                     </h4>
                 </div>
                 <div class="card-body p-4">
@@ -77,8 +77,8 @@
 
                     <div class="text-center mt-4">
                         <p class="mb-0">Sudah punya akun? 
-                            <a href="{{ route('login') }}" class="text-decoration-none fw-bold">
-                                <i class="fas fa-sign-in-alt me-1"></i>Masuk di sini
+                            <a href="{{ route('login') }}" class="text-decoration-none fw-semibold" style="color: #6f42c1;">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login di sini
                             </a>
                         </p>
                     </div>
