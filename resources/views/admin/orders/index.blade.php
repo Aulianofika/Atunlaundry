@@ -15,7 +15,7 @@
         </a>
     </div>
 
-    <!-- Filter Card -->
+    <!-- Filter Card
     <div class="card border-0 shadow-sm rounded-4 mb-4">
         <div class="card-header bg-purple-soft text-purple fw-semibold rounded-top-4">
             <i class="bi bi-funnel me-2"></i>Filter Pesanan
@@ -58,7 +58,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> -->
 
     <!-- Table Card -->
     <div class="card border-0 shadow-sm rounded-4">
@@ -201,12 +201,12 @@
                                                             <div class="col-md-4">
                                                                 <label for="status{{ $order->id }}" class="form-label">Status</label>
                                                                 <select class="form-select" id="status{{ $order->id }}" name="status" required>
-                                                                    <option value="waiting_for_pickup" {{ $order->status === 'waiting_for_pickup' ? 'selected' : '' }}>Waiting for Pickup</option>
-                                                                    <option value="picked_and_weighed" {{ $order->status === 'picked_and_weighed' ? 'selected' : '' }}>Picked & Weighed</option>
-                                                                    <option value="waiting_for_payment" {{ $order->status === 'waiting_for_payment' ? 'selected' : '' }}>Waiting for Payment</option>
-                                                                    <option value="waiting_for_admin_verification" {{ $order->status === 'waiting_for_admin_verification' ? 'selected' : '' }}>Waiting for Verification</option>
-                                                                    <option value="processed" {{ $order->status === 'processed' ? 'selected' : '' }}>Processed</option>
-                                                                    <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Completed</option>
+                                                                    <option value="waiting_for_pickup" {{ $order->status === 'waiting_for_pickup' ? 'selected' : '' }}>Menunggu Penjemputan</option>
+                                                                    <option value="picked_and_weighed" {{ $order->status === 'picked_and_weighed' ? 'selected' : '' }}>Penimbangan</option>
+                                                                    <option value="waiting_for_payment" {{ $order->status === 'waiting_for_payment' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                                                                    <option value="waiting_for_admin_verification" {{ $order->status === 'waiting_for_admin_verification' ? 'selected' : '' }}>Menunggu Verifikasi Admin</option>
+                                                                    <option value="processed" {{ $order->status === 'processed' ? 'selected' : '' }}>Proses</option>
+                                                                    <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Selesai</option>
                                                                 </select>
                                                             </div>
                                                             <div class="col-md-4">

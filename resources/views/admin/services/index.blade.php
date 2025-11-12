@@ -7,27 +7,17 @@
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-semibold text-secondary mb-0">
-            <i class=""></i>
-        </h2>
+        <h2 class="fw-semibold text-secondary mb-0"></h2>
         <a href="{{ route('services.create') }}" class="btn btn-primary">
             <i class="bi bi-plus-circle me-2"></i>Tambah Layanan
         </a>
     </div>
 
-    <!-- Alert -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    @endif
+    {{-- Alert ditampilkan dari layouts.admin --}}
 
     <!-- Card Tabel -->
     <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-header bg-purple-soft text-purple fw-semibold rounded-top-4">
-            <i class=""></i>
-        </div>
+        <div class="card-header bg-purple-soft text-purple fw-semibold rounded-top-4"></div>
         <div class="card-body p-0">
             @if($services->count() > 0)
             <div class="table-responsive">

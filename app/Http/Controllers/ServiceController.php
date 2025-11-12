@@ -51,7 +51,7 @@ class ServiceController extends Controller
 
         $service->update($request->all());
 
-        return redirect()->route('admin.services.index')
+        return redirect()->route('services.index')
                          ->with('success', 'Service updated successfully.');
     }
 
@@ -59,13 +59,13 @@ class ServiceController extends Controller
     {
         // Optional: cek apakah ada order terkait sebelum hapus
         if ($service->orders()->count() > 0) {
-            return redirect()->route('admin.services.index')
+            return redirect()->route('services.index')
                              ->with('error', 'Cannot delete service because it has related orders.');
         }
 
         $service->delete();
 
-        return redirect()->route('admin.services.index')
+        return redirect()->route('services.index')
                          ->with('success', 'Service deleted successfully.');
     }
 }
