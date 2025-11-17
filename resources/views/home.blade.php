@@ -33,7 +33,7 @@
 .service-icon i { font-size: 34px !important; }
 
 .service-card .card-title { margin-top: 6px; margin-bottom: 6px; }
-.service-card .card-text { margin-bottom: 12px; color: #6b557d; }
+.service-card .card-text { margin-bottom: 12px; color: #A8D8C9; }
 .service-card .service-footer {
     margin-top: auto;
     display: flex;

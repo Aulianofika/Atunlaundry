@@ -138,8 +138,8 @@
 
         /* Footer styles using Poppins for a clean modern look */
         .footer {
-            background: linear-gradient(135deg, var(--dark-purple), var(--accent-purple));
-            color: white;
+            background: #A8D8C9;
+            color: var(--text-dark);
             padding: 48px 0;
             margin-top: 50px;
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -151,27 +151,27 @@
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-weight: 600;
             letter-spacing: 0.2px;
-            color: #fff;
+            color: var(--text-dark);
             margin-bottom: 12px;
         }
 
         .footer p {
-            color: rgba(255,255,255,0.92);
+            color: var(--text-dark);
             margin-bottom: 8px;
         }
 
         .footer a {
-            color: rgba(255,255,255,0.9);
+            color: var(--text-dark);
             text-decoration: none;
             transition: color 0.2s ease;
         }
 
         .footer a:hover {
-            color: #fff;
+            color: var(--accent-purple);
         }
 
         .footer .contact-item i {
-            color: rgba(255,255,255,0.85);
+            color: var(--text-dark);
             width: 22px;
         }
 

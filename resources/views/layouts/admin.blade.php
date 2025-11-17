@@ -18,13 +18,13 @@
 
     <style>
         :root {
-            --primary-purple: #E8F5E9; /* mint */
+            --primary-purple: #A8D8C9; /* mint */
             --secondary-purple: #FFFFFF; /* white */
-            --accent-purple: #2E7D32; /* dark green */
-            --dark-purple: #1A237E; /* dark blue */
-            --light-purple: #F4FBF6; /* light mint */
-            --text-dark: #1A237E; /* dark blue */
-            --text-light: #2E7D32; /* accent green */
+            --accent-purple: #2E8B57; /* forest green */
+            --dark-purple: #224F34; /* dark forest green */
+            --light-purple: #F0FFF0; /* honeydew */
+            --text-dark: #224F34; /* dark forest green */
+            --text-light: #2E8B57; /* forest green */
         }
 
         body {
@@ -54,7 +54,7 @@
             left: 0;
             height: 100vh;
             width: 250px;
-            background: linear-gradient(135deg, var(--dark-purple), var(--accent-purple));
+            background: var(--dark-purple);
             color: white;
             transition: all 0.3s ease;
             z-index: 1000;
@@ -137,7 +137,7 @@
         }
         /* === Updated Theme (Mint / Dark Blue / Dark Green) === */
         .bg-gradient-primary {
-            background: linear-gradient(135deg, var(--primary-purple), rgba(232,245,233,0.6));
+            background: var(--primary-purple);
         }
         .text-accent {
             color: var(--accent-purple) !important;
@@ -145,7 +145,7 @@
 
         /* Tombol utama gradient */
         .btn-gradient {
-            background: linear-gradient(135deg, var(--accent-purple), var(--dark-purple));
+            background: var(--accent-purple);
             color: #fff !important;
             border: none;
             border-radius: 40px;
@@ -194,19 +194,19 @@
             text-decoration: none;
         }
         .btn-action.edit {
-            background: linear-gradient(135deg, #a855f7, #c4d1e6ff);
+            background: var(--accent-purple);
         }
         .btn-action.edit:hover {
-            background: linear-gradient(135deg, #9333ea, #b7c0d1ff);
+            background: var(--dark-purple);
             transform: translateY(-2px);
         }
 
         .btn-action.delete {
-            background: linear-gradient(135deg, #ef4444, #f43f5e);
-            box-shadow: 0 3px 8px rgba(244, 63, 94, 0.3);
+            background: #E53E3E;
+            box-shadow: 0 3px 8px rgba(229, 62, 62, 0.3);
         }
         .btn-action.delete:hover {
-            background: linear-gradient(135deg, #dc2626, #e11d48);
+            background: #C53030;
             transform: translateY(-2px);
         }
 
@@ -265,7 +265,7 @@
         }
         /* Warna tema lembut agar selaras dengan Kelola Pesanan */
         .bg-primary-soft {
-            background-color: rgba(232,245,233,0.6) !important;
+            background-color: var(--light-purple) !important;
         }
         .text-accent { color: var(--accent-purple) !important; }
         .btn-primary-soft {
@@ -294,7 +294,7 @@
         .card { border-radius: 1rem; }
         /* Warna dasar */
         .text-accent { color: var(--accent-purple) !important; }
-        .bg-primary-soft { background-color: rgba(232,245,233,0.6) !important; }
+        .bg-primary-soft { background-color: var(--light-purple) !important; }
 
         /* Badge lembut */
     .badge-light-warning { background-color: #fff8e1; color: #b28704; }
@@ -321,7 +321,7 @@
         .user-avatar {
             width: 35px;
             height: 35px;
-            background: linear-gradient(135deg, var(--accent-purple), var(--dark-purple));
+            background: var(--accent-purple);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -342,7 +342,7 @@
         }
 
         .card-header {
-            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            background: var(--primary-purple);
             border-radius: 15px 15px 0 0 !important;
             border: none;
             color: var(--text-dark);
@@ -350,7 +350,7 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent-purple), var(--dark-purple));
+            background: var(--accent-purple);
             border: none;
             border-radius: 25px;
             padding: 10px 25px;
@@ -359,14 +359,14 @@
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, var(--dark-purple), var(--accent-purple));
+            background: var(--dark-purple);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 5px 15px rgba(34, 79, 52, 0.3);
         }
 
         .stats-card {
-            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
-            color: white;
+            background: var(--primary-purple);
+            color: var(--text-dark);
             border-radius: 15px;
             padding: 25px;
             text-align: center;
@@ -375,7 +375,7 @@
 
         .stats-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(139, 95, 191, 0.2);
+            box-shadow: 0 10px 25px rgba(46, 139, 87, 0.2);
         }
 
         .stats-icon {
@@ -416,14 +416,14 @@
             cursor: pointer;
         }
         .user-info:hover {
-            background-color: #ece3f7;
+            background-color: #e0f2f1;
             transform: translateY(-1px);
         }
 
         .user-avatar {
             width: 38px;
             height: 38px;
-            background: linear-gradient(135deg, var(--accent-purple), var(--dark-purple));
+            background: var(--accent-purple);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -431,7 +431,7 @@
             color: white;
             font-weight: 700;
             font-size: 1rem;
-            box-shadow: 0 2px 6px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 2px 6px rgba(46, 139, 87, 0.3);
         }
 
         .dropdown-menu {

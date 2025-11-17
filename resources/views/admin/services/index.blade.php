@@ -25,7 +25,7 @@
 
     <!-- Card Tabel -->
     <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-header bg-purple-soft text-purple fw-semibold rounded-top-4"></div>
+        <div class="card-header bg-primary-soft text-accent fw-semibold rounded-top-4"></div>
         <div class="card-body p-0">
             @if($services->count() > 0)
             <div class="table-responsive">
@@ -50,7 +50,7 @@
                             <td>
                                 @if($service->is_active)
                                     <span class="badge rounded-pill bg-light-success text-success px-3 py-2">
-                                        <i class="bi bi-check-circle-fill me-1 text-green-600"></i>Aktif
+                                        <i class="bi bi-check-circle-fill me-1 text-accent"></i>Aktif
                                     </span>
                                 @else
                                     <span class="badge rounded-pill bg-light-secondary text-secondary px-3 py-2">
