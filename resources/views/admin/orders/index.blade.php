@@ -15,7 +15,7 @@
         </a>
     </div>
 
-    <!-- Filter Card -->
+    <!-- Filter Card
     <div class="card border-0 shadow-sm rounded-4 mb-4">
         <div class="card-header bg-purple-soft text-purple fw-semibold rounded-top-4">
             <i class="bi bi-funnel me-2"></i>Filter Pesanan
@@ -58,7 +58,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> -->
 
     <!-- Table Card -->
     <div class="card border-0 shadow-sm rounded-4">
@@ -127,121 +127,35 @@
                             <!-- Aksi -->
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-outline-primary btn-sm" 
-                                                        data-bs-toggle="modal" data-bs-target="#orderModal{{ $order->id }}">
+                                                <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-outline-primary btn-sm" title="Detail">
                                                     <i class="fas fa-eye"></i>
-                                                </button>
+                                                </a>
                                                 @if($order->status === 'waiting_for_admin_verification' && $order->payment_proof)
                                                     <form action="{{ route('admin.orders.verify-payment', $order) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-outline-success btn-sm" 
-                                                                onclick="return confirm('Verify this payment?')">
+                                                        <button type="submit" class="btn btn-outline-success btn-sm" title="Verifikasi Pembayaran"
+                                                                onclick="return confirm('Verifikasi pembayaran ini?')">
                                                             <i class="fas fa-check"></i>
                                                         </button>
                                                     </form>
                                                 @endif
+                                                <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="d-inline" onsubmit="return confirm('Anda yakin ingin menghapus pesanan ini? Aksi ini tidak dapat dibatalkan.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
                                     
-                                     <!-- Order Details Modal -->
-                                    <div class="modal fade" id="orderModal{{ $order->id }}" tabindex="-1">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Order Details - {{ $order->order_code }}</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <h6 class="fw-bold">Order Information</h6>
-                                                            <p><strong>Order Code:</strong> {{ $order->order_code }}</p>
-                                                            <p><strong>Price:</strong> Rp {{ number_format($order->service->price_per_kg, 0, ',', '.') }}/kg</p>
-                                                            <p><strong>Service:</strong> {{ $order->service->name }}</p>
-                                                            <p><strong>Type:</strong> {{ ucfirst($order->order_type) }}</p>
-                                                            <p><strong>Pickup:</strong> {{ ucfirst($order->pickup_method) }}</p>
-                                                            <p><strong>Status:</strong> 
-                                                                <span class="badge status-{{ str_replace('_', '-', $order->status) }}">
-                                                                    {{ $order->status_display }}
-                                                                </span>
-                                                            </p>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <h6 class="fw-bold">Customer Information</h6>
-                                                            <p><strong>Name:</strong> {{ $order->customer_name }}</p>
-                                                            <p><strong>Phone:</strong> {{ $order->customer_phone }}</p>
-                                                            <p><strong>Address:</strong> {{ $order->customer_address }}</p>
-                                                            <p><strong>Date:</strong> {{ $order->created_at->format('M d, Y H:i') }}</p>
-                                                        </div>
-                                                    </div>
-
-                                                    @if($order->notes)
-                                                        <div class="mt-3">
-                                                            <h6 class="fw-bold">Notes</h6>
-                                                            <p class="text-muted">{{ $order->notes }}</p>
-                                                        </div>
-                                                    @endif
-
-                                                    @if($order->payment_proof)
-                                                        <div class="mt-3">
-                                                            <h6 class="fw-bold">Payment Proof</h6>
-                                                            <a href="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" 
-                                                               target="_blank" class="btn btn-outline-primary btn-sm">
-                                                                <i class="fas fa-eye me-1"></i>View Proof
-                                                            </a>
-                                                        </div>
-                                                    @endif
-
-                                                    <!-- Update Order Form -->
-                                                    <form action="{{ route('admin.orders.update-status', $order) }}" method="POST" class="mt-4">
-                                                        @csrf
-                                                        <h6 class="fw-bold">Update Order</h6>
-                                                        <div class="row g-3">
-                                                            <div class="col-md-4">
-                                                                <label for="status{{ $order->id }}" class="form-label">Status</label>
-                                                                <select class="form-select" id="status{{ $order->id }}" name="status" required>
-                                                                    <option value="waiting_for_pickup" {{ $order->status === 'waiting_for_pickup' ? 'selected' : '' }}>Waiting for Pickup</option>
-                                                                    <option value="picked_and_weighed" {{ $order->status === 'picked_and_weighed' ? 'selected' : '' }}>Picked & Weighed</option>
-                                                                    <option value="waiting_for_payment" {{ $order->status === 'waiting_for_payment' ? 'selected' : '' }}>Waiting for Payment</option>
-                                                                    <option value="waiting_for_admin_verification" {{ $order->status === 'waiting_for_admin_verification' ? 'selected' : '' }}>Waiting for Verification</option>
-                                                                    <option value="processed" {{ $order->status === 'processed' ? 'selected' : '' }}>Processed</option>
-                                                                    <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Completed</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label for="weight{{ $order->id }}" class="form-label">Weight (kg)</label>
-                                                                <input type="number" class="form-control" id="weight{{ $order->id }}" 
-                                                                       name="weight" value="{{ $order->weight }}" step="0.1" min="0">
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <label for="price{{ $order->id }}" class="form-label">Price (Rp)</label>
-                                                                <input type="number" class="form-control" id="price{{ $order->id }}" 
-                                                                       name="price" value="{{ $order->price }}" min="0">
-                                                            </div>
-                                                        </div>
-                                                        <div class="mt-3">
-                                                            <label for="notes{{ $order->id }}" class="form-label">Notes</label>
-                                                            <textarea class="form-control" id="notes{{ $order->id }}" name="notes" rows="2">{{ $order->notes }}</textarea>
-                                                        </div>
-                                                        <div class="mt-3">
-                                                            <button type="submit" class="btn btn-primary">
-                                                                <i class="fas fa-save me-1"></i>Update Order
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                        
-                        @endforeach
-                        
+                                        
+                                        @endforeach
 
                     </tbody>
                 </table>
             </div>
-
             <!-- Pagination -->
             <div class="d-flex justify-content-center mt-4">
                 {{ $orders->links() }}

@@ -22,13 +22,14 @@ class ServiceController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'unit' => 'required|string|in:Per KG,Per Helai',
             'description' => 'nullable|string',
             'price_per_kg' => 'required|numeric|min:0',
             'estimated_days' => 'required|integer|min:1',
             'is_active' => 'required|boolean',
         ]);
 
-        Service::create($request->all());
+        Service::create($request->only(['name','unit','description','price_per_kg','estimated_days','is_active']));
 
         return redirect()->route('services.index')
                          ->with('success', 'Service created successfully.');
@@ -43,15 +44,16 @@ class ServiceController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'unit' => 'required|string|in:Per KG,Per Helai',
             'description' => 'nullable|string',
             'price_per_kg' => 'required|numeric|min:0',
             'estimated_days' => 'required|integer|min:1',
             'is_active' => 'required|boolean',
         ]);
 
-        $service->update($request->all());
+        $service->update($request->only(['name','unit','description','price_per_kg','estimated_days','is_active']));
 
-        return redirect()->route('admin.services.index')
+        return redirect()->route('services.index')
                          ->with('success', 'Service updated successfully.');
     }
 
@@ -59,13 +61,13 @@ class ServiceController extends Controller
     {
         // Optional: cek apakah ada order terkait sebelum hapus
         if ($service->orders()->count() > 0) {
-            return redirect()->route('admin.services.index')
+            return redirect()->route('services.index')
                              ->with('error', 'Cannot delete service because it has related orders.');
         }
 
         $service->delete();
 
-        return redirect()->route('admin.services.index')
+        return redirect()->route('services.index')
                          ->with('success', 'Service deleted successfully.');
     }
 }

@@ -43,10 +43,15 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
-        Route::post('/orders/{order}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
-        Route::post('/orders/{order}/verify-payment', [AdminController::class, 'verifyPayment'])->name('orders.verify-payment');
+        // Static admin order creation routes must come before the dynamic {order} route
         Route::get('/orders/create-manual', [AdminController::class, 'createManualOrder'])->name('orders.create-manual');
         Route::post('/orders/create-manual', [AdminController::class, 'storeManualOrder'])->name('orders.store-manual');
+    Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('orders.show');
+    Route::delete('/orders/{order}', [AdminController::class, 'destroyOrder'])->name('orders.destroy');
+    Route::get('/orders/{order}/print', [AdminController::class, 'printOrder'])->name('orders.print');
+        Route::post('/orders/{order}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
+        Route::post('/orders/{order}/verify-payment', [AdminController::class, 'verifyPayment'])->name('orders.verify-payment');
+    Route::post('/orders/{order}/upload-weigh-proof', [AdminController::class, 'uploadWeighProof'])->name('orders.upload-weigh-proof');
         
         // Admin Data routes (Atun only)
         Route::prefix('data')->name('data.')->group(function () {

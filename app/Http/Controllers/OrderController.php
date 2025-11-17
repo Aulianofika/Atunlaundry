@@ -36,6 +36,7 @@ class OrderController extends Controller
             'customer_address' => 'required|string',
             'pickup_method' => 'required|in:pickup,delivery',
             'notes' => 'nullable|string',
+            'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $order = Order::create([
@@ -49,6 +50,18 @@ class OrderController extends Controller
             'pickup_method' => $request->pickup_method,
             'notes' => $request->notes,
         ]);
+
+        // Handle optional payment proof uploaded during order creation
+        if ($request->hasFile('payment_proof')) {
+            $file = $request->file('payment_proof');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            $file->storeAs('payment_proofs', $filename, 'public');
+
+            $order->update([
+                'payment_proof' => $filename,
+                'status' => 'waiting_for_admin_verification'
+            ]);
+        }
 
         return redirect()->route('orders.show', $order)
             ->with('success', 'Order created successfully! Your order code is: ' . $order->order_code);

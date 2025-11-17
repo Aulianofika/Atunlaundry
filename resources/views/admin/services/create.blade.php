@@ -30,8 +30,19 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Harga per Kg (Rp)</label>
-                    <input type="number" name="price_per_kg" class="form-control" placeholder="Contoh: 10000" required>
+                    <label class="form-label fw-semibold">Harga (Rp)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" name="price_per_kg" class="form-control" placeholder="Contoh: 10000" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Satuan</label>
+                    <select name="unit" class="form-select">
+                        <option value="Per KG">Per KG</option>
+                        <option value="Per Helai">Per Helai</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">

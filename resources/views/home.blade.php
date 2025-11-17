@@ -3,6 +3,52 @@
 @section('title', 'Beranda')
 
 @section('content')
+@section('styles')
+<style>
+/* Hero tweaks */
+.hero-section .display-4 {
+    font-weight: 800;
+    letter-spacing: -0.015em;
+}
+.hero-section .lead {
+    max-width: 520px;
+}
+
+/* Services cards polishing */
+.service-card .card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+.service-icon {
+    width: 84px;
+    height: 84px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
+    margin: 0 auto 16px auto;
+}
+.service-icon i { font-size: 34px !important; }
+
+.service-card .card-title { margin-top: 6px; margin-bottom: 6px; }
+.service-card .card-text { margin-bottom: 12px; color: #6b557d; }
+.service-card .service-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.service-price { color: #0d6efd; font-weight: 700; }
+.service-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(139,95,191,0.12); }
+
+@media (max-width: 767px) {
+    .hero-section { padding: 40px 0; }
+    .service-icon { width: 64px; height: 64px; }
+}
+</style>
+@endsection
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
@@ -58,31 +104,31 @@
             <div class="col-lg-4 col-md-6">
                 <div class="card service-card h-100">
                     <div class="card-body text-center p-4">
-                        <div class="mb-3">
+                        <div class="service-icon">
                             @switch($service->name)
                                 @case('Regular Laundry')
-                                    <i class="fas fa-tshirt fa-3x text-primary"></i>
+                                    <i class="fas fa-tshirt text-primary"></i>
                                     @break
                                 @case('Express Laundry')
-                                    <i class="fas fa-bolt fa-3x text-warning"></i>
+                                    <i class="fas fa-bolt text-warning"></i>
                                     @break
                                 @case('Ironing Only')
-                                    <i class="fas fa-iron fa-3x text-info"></i>
+                                    <i class="fas fa-iron text-info"></i>
                                     @break
                                 @case('Dry Clean')
-                                    <i class="fas fa-gem fa-3x text-success"></i>
+                                    <i class="fas fa-gem text-success"></i>
                                     @break
                                 @case('Wash & Iron')
-                                    <i class="fas fa-sparkles fa-3x text-purple"></i>
+                                    <i class="fas fa-sparkles text-purple"></i>
                                     @break
                                 @default
-                                    <i class="fas fa-tshirt fa-3x text-primary"></i>
+                                    <i class="fas fa-tshirt text-primary"></i>
                             @endswitch
                         </div>
                         <h5 class="card-title fw-bold">{{ $service->name }}</h5>
-                        <p class="card-text text-muted">{{ $service->description }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 text-primary mb-0">
+                        <p class="card-text">{{ $service->description }}</p>
+                        <div class="service-footer">
+                            <span class="service-price">
                                 <i class="fas fa-tag me-1"></i>Rp {{ number_format($service->price_per_kg, 0, ',', '.') }}/kg
                             </span>
                             <small class="text-muted">

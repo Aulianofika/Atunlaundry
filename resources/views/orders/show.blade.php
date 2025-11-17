@@ -100,6 +100,31 @@
             </div>
             @endif
 
+            <!-- Hasil Timbangan (admin uploaded) -->
+            @if($order->weigh_proof || $order->weight)
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-weight-hanging me-2"></i>Hasil Timbangan
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if($order->weight)
+                        <p><strong>Berat (ditetapkan admin):</strong> {{ $order->weight }} kg</p>
+                    @endif
+
+                    @if($order->weigh_proof)
+                        <p class="mb-2"><strong>Bukti Timbangan:</strong></p>
+                        <a href="{{ asset('storage/scale_proofs/' . $order->weigh_proof) }}" target="_blank">
+                            <img src="{{ asset('storage/scale_proofs/' . $order->weigh_proof) }}" alt="Weigh Proof" class="img-thumbnail" style="max-width:300px;" />
+                        </a>
+                    @else
+                        <div class="alert alert-secondary mb-0">Bukti timbangan belum tersedia.</div>
+                    @endif
+                </div>
+            </div>
+            @endif
+
             <!-- Upload Payment Proof -->
             @if($order->status === 'waiting_for_payment' && $order->user_id)
             <div class="card mt-4">

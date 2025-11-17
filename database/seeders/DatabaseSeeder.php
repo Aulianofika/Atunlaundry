@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             ServiceSeeder::class,
             AdminDataSeeder::class,
+            \Database\Seeders\OrderSeeder::class,
         ]);
     }
 }

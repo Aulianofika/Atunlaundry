@@ -10,16 +10,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Poppins for footer and headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
         :root {
-            --primary-purple: #E8D5F2;
-            --secondary-purple: #D1B3E6;
-            --accent-purple: #B19CD9;
-            --dark-purple: #8B5FBF;
-            --light-purple: #F5F0FA;
-            --text-dark: #2D1B3D;
-            --text-light: #6B46C1;
+            /* New palette requested by user */
+            --primary-purple: #E8F5E9; /* Mint green (primary) */
+            --secondary-purple: #FFFFFF; /* White (secondary) */
+            --accent-purple: #2E7D32; /* Dark green (accent) */
+            --dark-purple: #1A237E; /* Dark blue (neutral / text) */
+            --light-purple: #F4FBF6; /* Very light mint (background) */
+            --text-dark: #1A237E; /* Dark blue for text */
+            --text-light: #2E7D32; /* Accent green for highlights */
         }
 
         body {
@@ -30,7 +33,7 @@
 
         .navbar {
             background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
-            box-shadow: 0 2px 10px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 2px 10px rgba(26, 35, 126, 0.06);
         }
 
         .navbar-brand {
@@ -46,12 +49,13 @@
             padding: 10px 25px;
             font-weight: 600;
             transition: all 0.3s ease;
+            color: #fff;
         }
 
         .btn-primary:hover {
             background: linear-gradient(135deg, var(--dark-purple), var(--accent-purple));
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 5px 15px rgba(26,35,126,0.12);
         }
 
         .btn-outline-primary {
@@ -61,10 +65,11 @@
             padding: 10px 25px;
             font-weight: 600;
             transition: all 0.3s ease;
+            background: transparent;
         }
 
         .btn-outline-primary:hover {
-            background-color: var(--dark-purple);
+            background-color: rgba(26,37,126,0.06);
             border-color: var(--dark-purple);
             transform: translateY(-2px);
         }
@@ -72,7 +77,7 @@
         .card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 5px 20px rgba(26, 35, 126, 0.04);
             background: white;
         }
 
@@ -86,14 +91,14 @@
 
         .form-control {
             border-radius: 10px;
-            border: 2px solid var(--primary-purple);
+            border: 2px solid rgba(46, 125, 50, 0.08);
             padding: 12px 15px;
             transition: all 0.3s ease;
         }
 
         .form-control:focus {
             border-color: var(--accent-purple);
-            box-shadow: 0 0 0 0.2rem rgba(177, 156, 217, 0.25);
+            box-shadow: 0 0 0 0.12rem rgba(46,125,50,0.12);
         }
 
         .alert {
@@ -107,15 +112,15 @@
             font-weight: 500;
         }
 
-        .status-waiting { background-color: #FFF3CD; color: #856404; }
-        .status-picked { background-color: #D1ECF1; color: #0C5460; }
-        .status-payment { background-color: #F8D7DA; color: #721C24; }
-        .status-verification { background-color: #D4EDDA; color: #155724; }
-        .status-processed { background-color: #E2E3E5; color: #383D41; }
-        .status-completed { background-color: #D1ECF1; color: #0C5460; }
+    .status-waiting { background: linear-gradient(45deg, #F0FFF4, #E6FAEF); color: #2E7D32; border: 1px solid #DFF3E3; }
+    .status-picked { background: linear-gradient(45deg, #EEF1FF, #E3E9FF); color: #1A237E; border: 1px solid #D6DEFF; }
+    .status-payment { background: linear-gradient(45deg, #FFF9F0, #FFF4E6); color: #8B4513; border: 1px solid #FFEDD5; }
+    .status-verification { background: linear-gradient(45deg, #F0FFF4, #E6FAEF); color: #2E7D32; border: 1px solid #DFF3E3; }
+    .status-processed { background: linear-gradient(45deg, #F6F7FA, #EEF0F6); color: #1A237E; border: 1px solid #E6E9F4; }
+    .status-completed { background: linear-gradient(45deg, #EEF1FF, #E3E9FF); color: #1A237E; border: 1px solid #D6DEFF; }
 
         .hero-section {
-            background: linear-gradient(135deg, var(--primary-purple), var(--secondary-purple));
+            background: linear-gradient(135deg, var(--primary-purple), rgba(232,245,233,0.6));
             padding: 80px 0;
             margin-bottom: 50px;
         }
@@ -128,24 +133,67 @@
 
         .service-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(139, 95, 191, 0.2);
+            box-shadow: 0 15px 30px rgba(26,35,126,0.08);
         }
 
+        /* Footer styles using Poppins for a clean modern look */
         .footer {
             background: linear-gradient(135deg, var(--dark-purple), var(--accent-purple));
             color: white;
-            padding: 40px 0;
+            padding: 48px 0;
             margin-top: 50px;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .footer h5 {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .footer p {
+            color: rgba(255,255,255,0.92);
+            margin-bottom: 8px;
         }
 
         .footer a {
-            color: var(--light-purple);
+            color: rgba(255,255,255,0.9);
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: color 0.2s ease;
         }
 
         .footer a:hover {
-            color: white;
+            color: #fff;
+        }
+
+        .footer .contact-item i {
+            color: rgba(255,255,255,0.85);
+            width: 22px;
+        }
+
+        .footer .copyright {
+            opacity: 0.92;
+            font-size: 0.9rem;
+        }
+        /* Responsive map container */
+        .map-responsive {
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+        }
+
+        .map-responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
         /* Hero Animation */
@@ -381,15 +429,23 @@
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h5><i class="fas fa-sparkles me-2 text-warning"></i>Atun Laundry</h5>
                     <p>Layanan laundry profesional dengan antar jemput. Cuci, kering, dan setrika berkualitas untuk kenyamanan Anda.</p>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h5><i class="fas fa-address-book me-2"></i>Informasi Kontak</h5>
-                    <p><i class="fas fa-phone me-2"></i>+62 812-3456-7890</p>
-                    <p><i class="fas fa-envelope me-2"></i>info@atunlaundry.com</p>
-                    <p><i class="fas fa-map-marker-alt me-2"></i>Kota Anda, Indonesia</p>
+                    <p class="contact-item"><i class="fas fa-phone me-2"></i>+62 812-3456-7890</p>
+                    <p class="contact-item"><i class="fas fa-envelope me-2"></i>info@atunlaundry.com</p>
+                    <p class="contact-item"><i class="fas fa-map-marker-alt me-2"></i>Kota Anda, Indonesia</p>
+                </div>
+                <div class="col-md-4">
+                    <h5><i class="fas fa-map-marked-alt me-2"></i>Lokasi Kami</h5>
+                    <div class="map-responsive rounded">
+                        <!-- Replace the src with your Google Maps embed URL or change coordinates -->
+                        <iframe src="https://www.google.com/maps?q=-6.200000,106.816666&hl=es;z=14&output=embed" width="600" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <small class="text-white-50 d-block mt-2">Klik peta untuk membuka di Google Maps. Ganti koordinat di template jika perlu.</small>
                 </div>
             </div>
             <hr class="my-4">
