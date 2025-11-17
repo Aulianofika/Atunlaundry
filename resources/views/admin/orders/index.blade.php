@@ -125,34 +125,31 @@
                             <td class="text-muted small">{{ $order->created_at->format('d M Y') }}</td>
 
                             <!-- Aksi -->
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-outline-primary btn-sm" title="Detail">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                @if($order->status === 'waiting_for_admin_verification' && $order->payment_proof)
-                                                    <form action="{{ route('admin.orders.verify-payment', $order) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-outline-success btn-sm" title="Verifikasi Pembayaran"
-                                                                onclick="return confirm('Verifikasi pembayaran ini?')">
-                                                            <i class="fas fa-check"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                                <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="d-inline" onsubmit="return confirm('Anda yakin ingin menghapus pesanan ini? Aksi ini tidak dapat dibatalkan.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    
-                                        
-                                        @endforeach
-
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-outline-primary btn-sm" title="Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    @if($order->status === 'waiting_for_admin_verification' && $order->payment_proof)
+                                        <form action="{{ route('admin.orders.verify-payment', $order) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-outline-success btn-sm" title="Verifikasi Pembayaran"
+                                                    onclick="return confirm('Verifikasi pembayaran ini?')">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="d-inline" onsubmit="return confirm('Anda yakin ingin menghapus pesanan ini? Aksi ini tidak dapat dibatalkan.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
