@@ -7,27 +7,21 @@
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-semibold text-secondary mb-0">Kelola Layanan</h2>
-            <div class="small text-muted">Total layanan: <span class="fw-semibold">{{ $services->total() }}</span></div>
+        <h2 class="fw-semibold text-secondary mb-0">
+            <i class=""></i>
+        </h2>
+        <a href="{{ route('services.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Tambah Layanan
+        </a>
+    </div>
+
+    <!-- Alert -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
+            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        <!-- Add button opens modal -->
-        <button class="btn btn-gradient d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#addServiceModal">
-            <i class="bi bi-plus-lg me-2"></i>Tambah Layanan
-        </button>
-    </div>
-
-    <!-- Search / Filter -->
-    <div class="mb-3">
-        <form method="GET" action="{{ route('services.index') }}">
-            <div class="input-group" style="max-width:480px;">
-                <input type="search" name="q" value="{{ request('q') }}" class="form-control" placeholder="Cari layanan...">
-                <button class="btn btn-purple-soft" type="submit"><i class="bi bi-search"></i></button>
-            </div>
-        </form>
-    </div>
-
-    {{-- Alert ditampilkan dari layouts.admin --}}
+    @endif
 
     <!-- Card Tabel -->
     <div class="card border-0 shadow-sm rounded-4">

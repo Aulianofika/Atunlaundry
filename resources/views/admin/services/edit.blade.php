@@ -27,58 +27,12 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Nama Layanan</label>
-                    <input 
-                        type="text" 
-                        name="name" 
-                        class="form-control @error('name') is-invalid @enderror"
-                        value="{{ old('name', $service->name) }}" 
-                        placeholder="Contoh: Cuci Kering" 
-                        required>
-                    @error('name')
-                        <div class="invalid-feedback small">{{ $message }}</div>
-                    @enderror
+                    <input type="text" name="name" class="form-control" value="{{ $service->name }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Harga (Rp)</label>
-                    <div class="input-group">
-                        <span class="input-group-text">Rp</span>
-                        <input 
-                            type="number" 
-                            name="price_per_kg" 
-                            class="form-control @error('price_per_kg') is-invalid @enderror"
-                            value="{{ old('price_per_kg', $service->price_per_kg) }}" 
-                            placeholder="Contoh: 10000" 
-                            required>
-                    </div>
-                    @error('price_per_kg')
-                        <div class="invalid-feedback small">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Satuan</label>
-                    <select name="unit" class="form-select @error('unit') is-invalid @enderror">
-                        <option value="Per KG" {{ old('unit', $service->unit) === 'Per KG' ? 'selected' : '' }}>Per KG</option>
-                        <option value="Per Helai" {{ old('unit', $service->unit) === 'Per Helai' ? 'selected' : '' }}>Per Helai</option>
-                    </select>
-                    @error('unit')
-                        <div class="invalid-feedback small">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Estimasi Hari</label>
-                    <input 
-                        type="number" 
-                        name="estimated_days" 
-                        class="form-control @error('estimated_days') is-invalid @enderror"
-                        value="{{ old('estimated_days', $service->estimated_days) }}" 
-                        placeholder="Contoh: 2" 
-                        required>
-                    @error('estimated_days')
-                        <div class="invalid-feedback small">{{ $message }}</div>
-                    @enderror
+                    <input type="number" name="price" class="form-control" value="{{ $service->price }}" required>
                 </div>
 
                 <div class="mb-3">
