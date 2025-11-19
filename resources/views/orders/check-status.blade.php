@@ -60,9 +60,10 @@
                                             <div class="col-md-6">
                                                 <h6 class="fw-bold">Status Information</h6>
                                                 <p><strong>Current Status:</strong> 
-                                                    <span class="badge status-{{ str_replace('_', '-', $order->status) }} fs-6">
+                                                    <span class="badge fs-6" style="color: #000; background-color: #e0e0e0;">
                                                         {{ $order->status_display }}
                                                     </span>
+
                                                 </p>
                                                 @if($order->weight)
                                                     <p><strong>Weight:</strong> {{ $order->weight }} kg</p>

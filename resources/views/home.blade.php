@@ -76,9 +76,7 @@
                 <div class="hero-icon-container">
                     <i class="fas fa-tshirt hero-main-icon"></i>
                     <div class="floating-icons">
-                        <i class="fas fa-sparkles floating-icon-1"></i>
-                        <i class="fas fa-heart floating-icon-2"></i>
-                        <i class="fas fa-star floating-icon-3"></i>
+                        
                     </div>
                 </div>
             </div>
