@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}/print', [AdminController::class, 'printOrder'])->name('orders.print');
         Route::post('/orders/{order}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
         Route::post('/orders/{order}/verify-payment', [AdminController::class, 'verifyPayment'])->name('orders.verify-payment');
-    Route::post('/orders/{order}/upload-weigh-proof', [AdminController::class, 'uploadWeighProof'])->name('orders.upload-weigh-proof');
+    Route::post('/orders/{order}/upload-view-proof', [AdminController::class, 'uploadViewProof'])->name('orders.upload-view-proof');
         
         // Admin Data routes (Atun only)
         Route::prefix('data')->name('data.')->group(function () {

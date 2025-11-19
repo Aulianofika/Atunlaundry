@@ -75,7 +75,7 @@
                 <div class="card-body">
                     <h5 class="fw-semibold">Informasi Timbangan & Bukti</h5>
 
-                    <form action="{{ route('admin.orders.upload-weigh-proof', $order) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.orders.upload-view-proof', $order) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label class="form-label">Berat (KG)</label>
@@ -84,17 +84,17 @@
 
                         <div class="mb-3">
                             <label class="form-label">Upload Bukti Timbangan</label>
-                            <input type="file" name="weigh_proof" id="weigh_proof_input" accept="image/*" class="form-control" />
+                            <input type="file" name="view_proof" id="view_proof_input" accept="image/*" class="form-control" />
                             <div class="form-text">Format: JPG/PNG/GIF. Maks 4MB.</div>
                         </div>
 
-                        <div id="weighPreview" class="mb-3" style="display: {{ $order->weigh_proof ? 'block' : 'none' }};">
-                            @if($order->weigh_proof)
+                        <div id="viewPreview" class="mb-3" style="display: {{ $order->view_proof ? 'block' : 'none' }};">
+                            @if($order->view_proof)
                                 <div class="mb-2">Preview saat ini:</div>
-                                <img src="{{ asset('storage/scale_proofs/' . $order->weigh_proof) }}" alt="Weigh Proof" style="max-width:200px;" class="img-thumbnail">
+                                <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" alt="View Proof" style="max-width:200px;" class="img-thumbnail">
                                 <div class="mt-2">
-                                    <a href="{{ asset('storage/scale_proofs/' . $order->weigh_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Lihat Gambar</a>
-                                    <button type="button" id="changeWeighBtn" class="btn btn-outline-secondary btn-sm">Ganti Gambar</button>
+                                    <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Lihat Gambar</a>
+                                    <button type="button" id="changeViewBtn" class="btn btn-outline-secondary btn-sm">Ganti Gambar</button>
                                 </div>
                             @endif
                         </div>
@@ -180,10 +180,10 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Script for weigh proof image preview
-    const input = document.getElementById('weigh_proof_input');
-    const preview = document.getElementById('weighPreview');
-    const changeWeighBtn = document.getElementById('changeWeighBtn');
+    // Script for view proof image preview
+    const input = document.getElementById('view_proof_input');
+    const preview = document.getElementById('viewPreview');
+    const changeViewBtn = document.getElementById('changeViewBtn');
 
     if (input) {
         input.addEventListener('change', function(e) {
@@ -206,8 +206,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (changeWeighBtn) {
-        changeWeighBtn.addEventListener('click', function() {
+    if (changeViewBtn) {
+        changeViewBtn.addEventListener('click', function() {
             input.click();
         });
     }
