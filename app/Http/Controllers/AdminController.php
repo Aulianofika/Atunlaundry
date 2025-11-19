@@ -9,6 +9,7 @@ use App\Models\Promotion;
 use App\Models\Expense;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -35,7 +36,32 @@ class AdminController extends Controller
             'recent_orders' => Order::with(['user', 'service'])->latest()->take(5)->get(),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        // Get online customers (users with role 'customer')
+        $onlineCustomers = User::where('role', 'customer')->get()->map(function ($user) {
+            return (object) [
+                'name' => $user->name,
+                'contact' => $user->email,
+                'type' => 'Online',
+            ];
+        });
+
+        // Get manual customers (distinct by phone number)
+        $manualCustomers = Order::where('order_type', 'manual')
+            ->select('customer_name', 'customer_phone')
+            ->distinct('customer_phone')
+            ->get()
+            ->map(function ($order) {
+                return (object) [
+                    'name' => $order->customer_name,
+                    'contact' => $order->customer_phone,
+                    'type' => 'Manual',
+                ];
+            });
+
+        // Merge the two collections
+        $customers = $onlineCustomers->merge($manualCustomers);
+
+        return view('admin.dashboard', compact('stats', 'customers'));
     }
 
     public function orders()
@@ -105,21 +131,21 @@ class AdminController extends Controller
         return back()->with('success', 'Payment verified successfully!');
     }
 
-    public function uploadWeighProof(Request $request, Order $order)
+    public function uploadViewProof(Request $request, Order $order)
     {
         $this->checkAdmin();
 
         $request->validate([
-            'weigh_proof' => 'required|image|mimes:jpg,jpeg,png,gif|max:4096',
+            'view_proof' => 'required|image|mimes:jpg,jpeg,png,gif|max:4096',
             'weight' => 'nullable|numeric|min:0',
         ]);
 
-        if ($request->hasFile('weigh_proof')) {
-            $file = $request->file('weigh_proof');
+        if ($request->hasFile('view_proof')) {
+            $file = $request->file('view_proof');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('public/scale_proofs', $filename);
 
-            $order->weigh_proof = $filename;
+            $order->view_proof = $filename;
         }
 
         if ($request->filled('weight')) {

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->string('view_proof')->nullable()->after('payment_proof');
+            $table->renameColumn('weigh_proof', 'view_proof');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('view_proof');
+            $table->renameColumn('view_proof', 'weigh_proof');
         });
     }
 };

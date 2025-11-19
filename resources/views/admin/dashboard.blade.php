@@ -125,6 +125,49 @@
     </div>
 </div>
 
+<!-- Daftar Pelanggan -->
+<div class="card border-0 shadow-sm rounded-4 mb-5">
+    <div class="card-header bg-white border-0">
+        <h5 class="fw-semibold mb-0 text-purple">
+            Daftar Pelanggan
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        @if($customers->count() > 0)
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light text-muted small text-uppercase">
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kontak</th>
+                            <th>Tipe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($customers as $customer)
+                        <tr>
+                            <td class="fw-semibold">{{ $customer->name }}</td>
+                            <td>{{ $customer->contact }}</td>
+                            <td>
+                                <span class="badge rounded-pill {{ $customer->type === 'Online' ? 'bg-light text-primary border' : 'bg-light text-secondary border' }}">
+                                    {{ $customer->type }}
+                                </span>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <div class="text-center py-5">
+                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                <h6 class="text-muted">Belum ada pelanggan</h6>
+                <p class="text-muted small">Data pelanggan akan muncul di sini.</p>
+            </div>
+        @endif
+    </div>
+</div>
+
 <!-- Aksi Cepat -->
 <div class="card border-0 shadow-sm rounded-4">
     <div class="card-header bg-white border-0">

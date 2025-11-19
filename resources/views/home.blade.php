@@ -27,7 +27,6 @@
     align-items: center;
     justify-content: center;
     border-radius: 18px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
     margin: 0 auto 16px auto;
 }
 .service-icon i { font-size: 34px !important; }

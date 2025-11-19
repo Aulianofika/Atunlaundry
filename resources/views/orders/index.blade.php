@@ -39,6 +39,14 @@
                                 @if($order->weight)
                                     <p class="mb-1"><strong>Weight:</strong> {{ $order->weight }} kg</p>
                                 @endif
+                                @if($order->view_proof)
+                                    <p class="mb-1">
+                                        <strong>Weighing Proof:</strong><br>
+                                        <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" target="_blank">
+                                            <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" alt="Weighing Proof" class="img-thumbnail mt-1" width="150">
+                                        </a>
+                                    </p>
+                                @endif
                                 @if($order->price)
                                     <p class="mb-1"><strong>Price:</strong> Rp {{ number_format($order->price, 0, ',', '.') }}</p>
                                 @endif
@@ -67,7 +75,7 @@
                             <div class="mt-3">
                                 <div class="alert alert-warning">
                                     <i class="fas fa-exclamation-triangle me-2"></i>
-                                    Please upload your payment proof to continue processing your order.
+                                    Please upload your view proof to continue processing your order.
                                 </div>
                             </div>
                         @endif
@@ -93,22 +101,22 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Upload Payment Proof</h5>
+                            <h5 class="modal-title">Upload View Proof</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <form action="{{ route('orders.upload-payment', $order) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="payment_proof" class="form-label">Payment Proof Image</label>
+                                    <label for="payment_proof" class="form-label">View Proof Image</label>
                                     <input type="file" class="form-control" id="payment_proof" name="payment_proof" 
                                            accept="image/*" required>
-                                    <div class="form-text">Please upload a clear image of your payment receipt or transfer proof.</div>
+                                    <div class="form-text">Please upload a clear image of your receipt or transfer proof.</div>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Upload Proof</button>
+                                <button type="submit" class="btn btn-primary">Upload View Proof</button>
                             </div>
                         </form>
                     </div>
