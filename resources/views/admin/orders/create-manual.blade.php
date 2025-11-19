@@ -9,7 +9,7 @@
         <div class="col-md-9">
             <div class="card border-0 shadow-lg rounded-4">
                 <div class="card-header text-center rounded-top-4 py-4 shadow-sm" 
-                    style="background: linear-gradient(135deg, #A8D8C9, color: #fff;">
+                    style="background: linear-gradient(135deg, #A8D8C9, color #fff);">
                     <h2 class="mb-1 fw-bold text-uppercase" style="font-size: 1.9rem; letter-spacing: 0.5px;">
                         Buat Pesanan 
                     </h2>
