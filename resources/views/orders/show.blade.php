@@ -114,13 +114,24 @@
                     @endif
 
                     @if($order->view_proof)
-                        <p class="mb-2"><strong>Bukti Timbangan:</strong></p>
-                        <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" target="_blank">
-                            <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" alt="View Proof" class="img-thumbnail" style="max-width:300px;" />
-                        </a>
+    <p class="mb-2 fw-semibold text-dark">Bukti Timbangan:</p>
+
+    <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}"
+       target="_blank"
+       class="btn btn-outline-success rounded-pill px-4 py-2">
+        <i class="fas fa-eye me-2"></i>Lihat Bukti Timbangan
+    </a>
+
+    <p class="text-muted small mt-2">
+        Klik tombol untuk membuka foto bukti timbangan.
+    </p>
+
                     @else
-                        <div class="alert alert-secondary mb-0">Bukti timbangan belum tersedia.</div>
+                        <div class="alert alert-secondary mb-0 rounded-3">
+                            Bukti timbangan belum tersedia.
+                        </div>
                     @endif
+
                 </div>
             </div>
             @endif

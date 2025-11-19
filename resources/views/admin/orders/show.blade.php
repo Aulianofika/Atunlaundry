@@ -88,7 +88,7 @@
                             <div class="form-text">Format: JPG/PNG/GIF. Maks 4MB.</div>
                         </div>
 
-                        <div id="viewPreview" class="mb-3" style="display: {{ $order->view_proof ? 'block' : 'none' }};">
+                      <div id="viewPreview" class="mb-3 {{ $order->view_proof ? '' : 'd-none' }}">
                             @if($order->view_proof)
                                 <div class="mb-2">Preview saat ini:</div>
                                 <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" alt="View Proof" style="max-width:200px;" class="img-thumbnail">

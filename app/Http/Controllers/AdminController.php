@@ -143,7 +143,7 @@ class AdminController extends Controller
         if ($request->hasFile('view_proof')) {
             $file = $request->file('view_proof');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('public/scale_proofs', $filename);
+            $path = $file->storeAs('scale_proofs', $filename, 'public');
 
             $order->view_proof = $filename;
         }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
 use App\Models\Order;
 use App\Models\Service;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class OrderController extends Controller
 {
@@ -115,4 +118,41 @@ class OrderController extends Controller
 
         return back()->with('error', 'Failed to upload payment proof.');
     }
+    public function uploadViewProof(Request $request, Order $order)
+{
+    $request->validate([
+        'weight' => 'required|numeric',
+        'view_proof' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096',
+    ]);
+
+    // Simpan berat
+    $order->weight = $request->weight;
+
+    // Jika admin upload bukti timbangan
+    if ($request->hasFile('view_proof')) {
+
+        // Pastikan folder ada
+        if (!Storage::exists('public/scale_proofs')) {
+            Storage::makeDirectory('public/scale_proofs');
+        }
+
+        // Hapus file lama jika ada
+        if ($order->view_proof && Storage::exists('public/scale_proofs/' . $order->view_proof)) {
+            Storage::delete('public/scale_proofs/' . $order->view_proof);
+        }
+
+        // Upload file baru
+        $file = $request->file('view_proof');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $file->storeAs('public/scale_proofs', $filename);
+
+        $order->view_proof = $filename;
+    }
+
+    $order->save();
+
+    return back()->with('success', 'Berat & bukti timbangan berhasil diperbarui!');
+}
+
 }
