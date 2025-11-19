@@ -21,6 +21,7 @@ class Order extends Model
         'pickup_method',
         'weight',
         'price',
+        'weigh_proof',
         'status',
         'payment_proof',
         'payment_verified',

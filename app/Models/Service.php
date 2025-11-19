@@ -12,6 +12,7 @@ class Service extends Model
     protected $fillable = [
         'name',
         'description',
+        'unit',
         'price_per_kg',
         'estimated_days',
         'is_active',

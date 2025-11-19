@@ -48,6 +48,24 @@ class AdminController extends Controller
         return view('admin.orders.index', compact('orders'));
     }
 
+    public function showOrder(Order $order)
+    {
+        $this->checkAdmin();
+
+        $order->load(['service', 'user']);
+
+        return view('admin.orders.show', compact('order'));
+    }
+
+    public function printOrder(Order $order)
+    {
+        $this->checkAdmin();
+
+        $order->load(['service', 'user']);
+
+        return view('admin.orders.print', compact('order'));
+    }
+
     public function updateOrderStatus(Request $request, Order $order)
     {
         $this->checkAdmin();
@@ -58,7 +76,20 @@ class AdminController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $order->update($request->only(['status', 'weight', 'price', 'notes']));
+        // Apply provided updates. Admin can set status directly.
+        $order->fill($request->only(['status', 'weight', 'price', 'notes']));
+
+        // If weight provided and service has a price, optionally compute price when appropriate
+        if ($request->filled('weight') && $order->service && $order->service->price_per_kg) {
+            $w = (float) $request->input('weight');
+            $order->price = $request->input('price', $w * (float) $order->service->price_per_kg);
+        }
+
+        $order->save();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'status' => $order->status, 'status_display' => $order->status_display]);
+        }
 
         return back()->with('success', 'Order updated successfully!');
     }
@@ -72,6 +103,38 @@ class AdminController extends Controller
         ]);
 
         return back()->with('success', 'Payment verified successfully!');
+    }
+
+    public function uploadWeighProof(Request $request, Order $order)
+    {
+        $this->checkAdmin();
+
+        $request->validate([
+            'weigh_proof' => 'required|image|mimes:jpg,jpeg,png,gif|max:4096',
+            'weight' => 'nullable|numeric|min:0',
+        ]);
+
+        if ($request->hasFile('weigh_proof')) {
+            $file = $request->file('weigh_proof');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public/scale_proofs', $filename);
+
+            $order->weigh_proof = $filename;
+        }
+
+        if ($request->filled('weight')) {
+            $order->weight = $request->input('weight');
+            // If weight provided, mark as picked_and_weighed
+            $order->status = 'picked_and_weighed';
+            // Optionally compute price if service price exists
+            if ($order->service && $order->service->price_per_kg) {
+                $order->price = $order->weight * $order->service->price_per_kg;
+            }
+        }
+
+        $order->save();
+
+        return back()->with('success', 'Bukti timbangan berhasil diunggah.');
     }
 
     public function createManualOrder()
@@ -105,5 +168,13 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.orders')->with('success', 'Manual order created successfully! Order code: ' . $order->order_code);
+    }
+
+    public function destroyOrder(Order $order)
+    {
+        $this->checkAdmin();
+        $order->delete();
+
+        return redirect()->route('admin.orders')->with('success', 'Order deleted successfully!');
     }
 }

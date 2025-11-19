@@ -13,7 +13,7 @@
                     </h4>
                 </div>
                 <div class="card-body p-4">
-                    <form method="POST" action="{{ route('orders.store') }}">
+                    <form method="POST" action="{{ route('orders.store') }}" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="row">
@@ -96,12 +96,23 @@
                             @enderror
                         </div>
 
-                        <div class="alert alert-info">
+                      
+                        <div class="mb-3">
+                            <label for="payment_proof" class="form-label">Upload Payment Proof (Optional)</label>
+                            <input type="file" class="form-control @error('payment_proof') is-invalid @enderror" id="payment_proof" name="payment_proof" accept="image/*">
+                            @error('payment_proof')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">You can optionally upload your payment receipt now. Accepted: JPG, PNG, GIF. Max 2MB.</div>
+                        </div>
+                        
+                          <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
                             <strong>Important:</strong> Setelah membuat pesanan, Anda akan menerima kode pesanan.
 Harap simpan kode ini dengan aman karena Anda akan membutuhkannya untuk melacak status pesanan.
 Harga akhir akan dihitung berdasarkan berat cucian Anda yang sebenarnya.
                         </div>
+
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary me-md-2">

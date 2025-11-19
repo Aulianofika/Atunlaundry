@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header text-center" style="background: #9c85c7; color: white;">
+                <div class="card-header text-center" style="background: linear-gradient(135deg, var(--primary-purple), rgba(232,245,233,0.6)); color: var(--text-dark);">
                     <h4 class="mb-0">
                        Masuk ke Akun Anda
                     </h4>
@@ -25,7 +25,7 @@
                         
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">
-                                <i class="fas fa-envelope me-1 text-purple"></i>Alamat Email
+                                <i class="fas fa-envelope me-1 text-accent"></i>Alamat Email
                             </label>
                             <input type="email" 
                                    class="form-control @error('email') is-invalid @enderror" 
@@ -38,7 +38,7 @@
 
                         <div class="mb-3">
                             <label for="password" class="form-label fw-semibold">
-                                <i class="fas fa-lock me-1 text-purple"></i>Kata Sandi
+                                <i class="fas fa-lock me-1 text-accent"></i>Kata Sandi
                             </label>
                             <input type="password" 
                                    class="form-control @error('password') is-invalid @enderror" 
@@ -56,14 +56,14 @@
                         </div>
 
                         <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg" style="background-color: #6f42c1; border: none;">
+                            <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-arrow-right-to-bracket me-2"></i>Masuk
                             </button>
                         </div>
                     </form>
 
                     <div class="text-center">
-                        <a href="{{ route('password.request') }}" class="text-decoration-none fw-semibold" style="color: #6f42c1;">
+                        <a href="{{ route('password.request') }}" class="text-decoration-none fw-semibold text-accent">
                             <i class="fas fa-unlock-alt me-1"></i>Lupa kata sandi?
                         </a>
                     </div>
@@ -72,7 +72,7 @@
 
                     <div class="text-center">
                         <p class="mb-0">Belum punya akun? 
-                            <a href="{{ route('register') }}" class="fw-semibold text-decoration-none" style="color: #6f42c1;">
+                            <a href="{{ route('register') }}" class="fw-semibold text-decoration-none text-accent">
                                 <i class="fas fa-user-plus me-1"></i>Daftar di sini
                             </a>
                         </p>
