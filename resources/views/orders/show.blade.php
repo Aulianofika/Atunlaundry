@@ -115,6 +115,7 @@
 
                     @if($order->view_proof)
     <p class="mb-2 fw-semibold text-dark">Bukti Timbangan:</p>
+    
 
     <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}"
        target="_blank"
