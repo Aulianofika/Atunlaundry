@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card">
-                <div class="card-header text-center" style="background: #9c85c7; color: white;">
+                <div class="card-header text-center" style="background: #A8D8C9; color: white;">
                     <h4 class="mb-0">
                        Buat Akun Baru
                     </h4>
@@ -77,7 +77,7 @@
 
                     <div class="text-center mt-4">
                         <p class="mb-0">Sudah punya akun? 
-                            <a href="{{ route('login') }}" class="text-decoration-none fw-semibold" style="color: #6f42c1;">
+                            <a href="{{ route('login') }}" class="text-decoration-none fw-semibold" style="color: #A8D8C9;">
                                 <i class="fas fa-sign-in-alt me-1"></i>Login di sini
                             </a>
                         </p>

@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-header text-center" style="background: linear-gradient(135deg, var(--primary-purple), rgba(232,245,233,0.6)); color: var(--text-dark);">
+                <div class="card-header text-center" style="background: linear-gradient(135deg, #A8D8C9, rgba(232,245,233,0.6)); color: var(--text-dark);">
                     <h4 class="mb-0">
                        Masuk ke Akun Anda
                     </h4>

@@ -33,13 +33,13 @@
 
 .service-card .card-title { margin-top: 6px; margin-bottom: 6px; }
 .service-card .card-text { margin-bottom: 12px; color: #A8D8C9; }
-.service-card .service-footer {
+.service-card .service-footer { 
     margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.service-price { color: #0d6efd; font-weight: 700; }
+.service-price { color: #ded300ff; font-weight: 700; }
 .service-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(139,95,191,0.12); }
 
 @media (max-width: 767px) {
@@ -72,14 +72,14 @@
                     </a>
                 </div>
             </div>
-            <div class="col-lg-6 text-center">
+            <!-- <div class="col-lg-6 text-center">
                 <div class="hero-icon-container">
                     <i class="fas fa-tshirt hero-main-icon"></i>
                     <div class="floating-icons">
                         
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>
