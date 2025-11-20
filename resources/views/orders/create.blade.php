@@ -97,14 +97,14 @@
                         </div>
 
                       
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="payment_proof" class="form-label">Upload Payment Proof (Optional)</label>
                             <input type="file" class="form-control @error('payment_proof') is-invalid @enderror" id="payment_proof" name="payment_proof" accept="image/*">
                             @error('payment_proof')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                             <div class="form-text">You can optionally upload your payment receipt now. Accepted: JPG, PNG, GIF. Max 2MB.</div>
-                        </div>
+                        </div> -->
                         
                           <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>

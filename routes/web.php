@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
     // Order routes
     Route::resource('orders', OrderController::class);
     Route::post('/orders/{order}/upload-payment', [OrderController::class, 'uploadPaymentProof'])->name('orders.upload-payment');
+    Route::post('/admin/orders/{order}/upload-view-proof', [OrderController::class, 'uploadViewProof'])->name('admin.orders.upload-view-proof');
+    
     
     // Admin routes
     Route::prefix('admin')->name('admin.')->group(function () {
