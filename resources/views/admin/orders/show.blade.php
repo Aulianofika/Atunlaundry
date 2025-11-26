@@ -39,25 +39,32 @@
 
                     <form id="servicesForm" action="{{ route('admin.orders.update-services', $order) }}" method="POST">
                         @csrf
-                        <div class="mb-2">
-                            <label for="serviceSelect" class="form-label small fw-semibold">Pilih Layanan (Ctrl/Cmd+Click untuk multi)</label>
-                            <select id="serviceSelect" name="service_ids[]" class="form-select form-select-sm" multiple size="6">
-                                @foreach($services as $s)
-                                    <option value="{{ $s->id }}" data-price="{{ $s->price_per_kg ?? 0 }}" data-days="{{ $s->estimated_days }}" {{ in_array($s->id, $selectedIds) ? 'selected' : '' }}>
-                                        {{ $s->name }} — Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }} / {{ $s->unit ?? 'satuan' }} · {{ $s->estimated_days }} hari
-                                    </option>
-                                @endforeach
-                            </select>
+                        <div class="list-group">
+                            @foreach($services as $s)
+                                <label class="list-group-item d-flex justify-content-between align-items-center service-item border-bottom py-2 px-3" data-service-id="{{ $s->id }}" style="cursor:pointer;">
+                                    <div class="d-flex align-items-center">
+                                        <input class="form-check-input me-3 service-checkbox" type="checkbox" name="service_ids[]" value="{{ $s->id }}" id="service_{{ $s->id }}" {{ in_array($s->id, $selectedIds) ? 'checked' : '' }} />
+                                        <div>
+                                            <div class="small fw-semibold mb-0">{{ $s->name }}</div>
+                                            <div class="small text-muted">Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }} / {{ $s->unit ?? 'satuan' }} · {{ $s->estimated_days }} hari</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <div class="small text-muted mb-0">Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }}</div>
+                                    </div>
+                                </label>
+                            @endforeach
                         </div>
 
-                        <div class="mt-2">
+                        <div class="mt-3">
                             <label class="form-label">Deskripsi Item (opsional)</label>
-                            <textarea name="items_description" class="form-control form-control-sm" rows="2">{{ old('items_description', $order->items_description) }}</textarea>
+                            <textarea name="items_description" class="form-control" rows="2">{{ old('items_description', $order->items_description) }}</textarea>
                         </div>
 
                         <div class="mt-3 d-flex gap-2">
-                            <button type="submit" class="btn btn-gradient btn-sm">Simpan Layanan</button>
-                            <button type="button" id="resetServicesBtn" class="btn btn-outline-secondary btn-sm">Reset Pilihan</button>
+                            <button type="submit" class="btn btn-gradient">Simpan Layanan</button>
+                            <button type="button" id="resetServicesBtn" class="btn btn-outline-secondary">Reset Pilihan</button>
                         </div>
                     </form>
                 </div>
@@ -250,21 +257,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Service selection interactions (native multi-select)
-    const serviceSelect = document.getElementById('serviceSelect');
+    // Service selection interactions
+    const serviceItems = document.querySelectorAll('.service-item');
     const resetBtn = document.getElementById('resetServicesBtn');
     const servicesForm = document.getElementById('servicesForm');
 
-    if (resetBtn && serviceSelect) {
+    serviceItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            // If click was on the checkbox, let it handle itself
+            if (e.target.classList.contains('service-checkbox')) return;
+            const checkbox = this.querySelector('.service-checkbox');
+            if (checkbox) checkbox.checked = !checkbox.checked;
+        });
+    });
+
+    if (resetBtn) {
         resetBtn.addEventListener('click', function() {
-            Array.from(serviceSelect.options).forEach(opt => opt.selected = false);
-            // trigger change to update any UI
-            serviceSelect.dispatchEvent(new Event('change'));
+            document.querySelectorAll('.service-checkbox').forEach(cb => cb.checked = false);
         });
     }
 
     if (servicesForm) {
         servicesForm.addEventListener('submit', function() {
+            // disable submit to avoid double posts
             servicesForm.querySelector('button[type="submit"]').disabled = true;
         });
     }
