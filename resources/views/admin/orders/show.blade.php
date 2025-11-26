@@ -26,47 +26,40 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="fw-semibold">Daftar Layanan</h5>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Layanan</th>
-                                    <th>Kuantitas</th>
-                                    <th>Harga</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- Example: if order has items relation, loop; else show service and weight --}}
-                                @if($order->items && $order->items->count())
-                                    @foreach($order->items as $item)
-                                        <tr>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->quantity }} {{ $item->unit ?? '' }}</td>
-                                            <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td>{{ $order->service->name }}</td>
-                                        <td>{{ $order->weight ? $order->weight . ' KG' : '-' }}</td>
-                                        <td>Rp {{ number_format($order->price ?? ($order->service->price_per_kg ?? 0), 0, ',', '.') }}</td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
 
-                    <div class="mt-3 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0">Total:</h6>
-                            <div class="fw-semibold fs-4">Rp {{ number_format($order->price ?? 0, 0, ',', '.') }}</div>
+                    @php
+                        $selectedIds = [];
+                        if (!empty($order->service_ids)) {
+                            $decoded = json_decode($order->service_ids, true);
+                            if (is_array($decoded)) $selectedIds = $decoded;
+                        } elseif (!empty($order->service_id)) {
+                            $selectedIds = [$order->service_id];
+                        }
+                    @endphp
+
+                    <form id="servicesForm" action="{{ route('admin.orders.update-services', $order) }}" method="POST">
+                        @csrf
+                        <div class="mb-2">
+                            <label for="serviceSelect" class="form-label small fw-semibold">Pilih Layanan (Ctrl/Cmd+Click untuk multi)</label>
+                            <select id="serviceSelect" name="service_ids[]" class="form-select form-select-sm" multiple size="6">
+                                @foreach($services as $s)
+                                    <option value="{{ $s->id }}" data-price="{{ $s->price_per_kg ?? 0 }}" data-days="{{ $s->estimated_days }}" {{ in_array($s->id, $selectedIds) ? 'selected' : '' }}>
+                                        {{ $s->name }} — Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }} / {{ $s->unit ?? 'satuan' }} · {{ $s->estimated_days }} hari
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        <div class="text-end">
-                            <div class="small text-muted">Status Saat Ini</div>
-                            <div class="fw-semibold" id="currentStatusLabel">{{ $order->status_display }}</div>
+                        <div class="mt-2">
+                            <label class="form-label">Deskripsi Item (opsional)</label>
+                            <textarea name="items_description" class="form-control form-control-sm" rows="2">{{ old('items_description', $order->items_description) }}</textarea>
                         </div>
-                    </div>
+
+                        <div class="mt-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-gradient btn-sm">Simpan Layanan</button>
+                            <button type="button" id="resetServicesBtn" class="btn btn-outline-secondary btn-sm">Reset Pilihan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -254,6 +247,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateBtn.disabled = false;
                 updateBtn.textContent = 'Perbarui Status';
             });
+        });
+    }
+
+    // Service selection interactions (native multi-select)
+    const serviceSelect = document.getElementById('serviceSelect');
+    const resetBtn = document.getElementById('resetServicesBtn');
+    const servicesForm = document.getElementById('servicesForm');
+
+    if (resetBtn && serviceSelect) {
+        resetBtn.addEventListener('click', function() {
+            Array.from(serviceSelect.options).forEach(opt => opt.selected = false);
+            // trigger change to update any UI
+            serviceSelect.dispatchEvent(new Event('change'));
+        });
+    }
+
+    if (servicesForm) {
+        servicesForm.addEventListener('submit', function() {
+            servicesForm.querySelector('button[type="submit"]').disabled = true;
         });
     }
 });

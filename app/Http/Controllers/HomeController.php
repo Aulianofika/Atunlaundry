@@ -10,7 +10,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $services = Service::where('is_active', true)->get();
+        // present services in creation order (oldest first)
+        $services = Service::where('is_active', true)->orderBy('id')->get();
         $promotions = Promotion::orderBy('created_at', 'desc')->get();
         
         return view('home', compact('services', 'promotions'));

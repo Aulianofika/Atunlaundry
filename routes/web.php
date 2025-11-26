@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('orders.show');
     Route::delete('/orders/{order}', [AdminController::class, 'destroyOrder'])->name('orders.destroy');
     Route::get('/orders/{order}/print', [AdminController::class, 'printOrder'])->name('orders.print');
+    Route::post('/orders/{order}/update-services', [AdminController::class, 'updateOrderServices'])->name('orders.update-services');
         Route::post('/orders/{order}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
         Route::post('/orders/{order}/verify-payment', [AdminController::class, 'verifyPayment'])->name('orders.verify-payment');
         Route::post('/orders/{order}/upload-view-proof', [AdminController::class, 'uploadViewProof'])->name('orders.upload-view-proof');

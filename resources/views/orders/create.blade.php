@@ -21,16 +21,16 @@
                                 <label class="form-label">Pilih Jenis Layanan <span class="text-danger">*</span></label>
                                 <div class="list-group service-list">
                                     @foreach($services as $service)
-                                        <label class="list-group-item d-flex justify-content-between align-items-start">
-                                            <div class="d-flex align-items-start">
-                                                <input class="form-check-input me-2 service-checkbox" type="checkbox"
+                                        <label class="list-group-item d-flex justify-content-between align-items-center border-bottom py-2 px-3">
+                                            <div class="d-flex align-items-center">
+                                                <input class="form-check-input me-3 service-checkbox" type="checkbox"
                                                        name="service_ids[]" id="service_{{ $service->id }}"
                                                        value="{{ $service->id }}"
                                                        data-price="{{ $service->price_per_kg }}"
                                                        data-days="{{ $service->estimated_days }}"
                                                        {{ (is_array(old('service_ids')) && in_array($service->id, old('service_ids'))) ? 'checked' : '' }}>
                                                 <div>
-                                                    <strong>{{ $service->name }}</strong>
+                                                    <div class="small fw-semibold mb-0">{{ $service->name }}</div>
                                                     <div class="small text-muted">Rp {{ number_format($service->price_per_kg, 0, ',', '.') }}/kg · {{ $service->estimated_days }} hari</div>
                                                 </div>
                                             </div>

@@ -26,7 +26,9 @@ class OrderController extends Controller
 
     public function create()
     {
-        $services = Service::where('is_active', true)->get();
+        // ensure services are returned in creation order so newly added
+        // services show at the bottom of the selection list
+        $services = Service::where('is_active', true)->orderBy('id')->get();
         return view('orders.create', compact('services'));
     }
 
