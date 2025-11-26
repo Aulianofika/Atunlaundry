@@ -7,6 +7,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\SalaryController;
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -53,7 +55,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}/print', [AdminController::class, 'printOrder'])->name('orders.print');
         Route::post('/orders/{order}/update-status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
         Route::post('/orders/{order}/verify-payment', [AdminController::class, 'verifyPayment'])->name('orders.verify-payment');
-    Route::post('/orders/{order}/upload-view-proof', [AdminController::class, 'uploadViewProof'])->name('orders.upload-view-proof');
+        Route::post('/orders/{order}/upload-view-proof', [AdminController::class, 'uploadViewProof'])->name('orders.upload-view-proof');
+        
+        // Expense routes
+        Route::resource('expenses', ExpenseController::class, ['except' => ['show']]);
+
+        // Salary routes
+        Route::resource('salaries', SalaryController::class, ['except' => ['show']]);
         
         // Admin Data routes (Atun only)
         Route::prefix('data')->name('data.')->group(function () {

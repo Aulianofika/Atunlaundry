@@ -174,17 +174,24 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
         $request->validate([
-            'service_id' => 'required|exists:services,id',
+            'service_ids' => 'required|array|min:1',
+            'service_ids.*' => 'exists:services,id',
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
             'customer_address' => 'required|string',
             'pickup_method' => 'required|in:pickup,delivery',
             'notes' => 'nullable|string',
+            'items_description' => 'nullable|string',
         ]);
+
+        $ids = $request->input('service_ids', []);
+        $firstServiceId = count($ids) ? $ids[0] : null;
 
         $order = Order::create([
             'order_code' => Order::generateOrderCode(),
-            'service_id' => $request->service_id,
+            'service_id' => $firstServiceId,
+            'service_ids' => json_encode($ids),
+            'items_description' => $request->input('items_description'),
             'order_type' => 'manual',
             'customer_name' => $request->customer_name,
             'customer_phone' => $request->customer_phone,

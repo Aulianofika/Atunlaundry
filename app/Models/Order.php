@@ -14,6 +14,7 @@ class Order extends Model
         'order_code',
         'user_id',
         'service_id',
+        'service_ids',
         'order_type',
         'customer_name',
         'customer_phone',
@@ -25,6 +26,7 @@ class Order extends Model
         'status',
         'payment_proof',
         'payment_verified',
+        'items_description',
         'notes',
         'estimated_completion',
     ];
@@ -34,6 +36,7 @@ class Order extends Model
         'price' => 'decimal:2',
         'payment_verified' => 'boolean',
         'estimated_completion' => 'datetime',
+        'service_ids' => 'array',
     ];
 
     /**
