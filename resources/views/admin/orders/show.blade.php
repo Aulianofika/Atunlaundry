@@ -26,47 +26,47 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="fw-semibold">Daftar Layanan</h5>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Layanan</th>
-                                    <th>Kuantitas</th>
-                                    <th>Harga</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{-- Example: if order has items relation, loop; else show service and weight --}}
-                                @if($order->items && $order->items->count())
-                                    @foreach($order->items as $item)
-                                        <tr>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->quantity }} {{ $item->unit ?? '' }}</td>
-                                            <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td>{{ $order->service->name }}</td>
-                                        <td>{{ $order->weight ? $order->weight . ' KG' : '-' }}</td>
-                                        <td>Rp {{ number_format($order->price ?? ($order->service->price_per_kg ?? 0), 0, ',', '.') }}</td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
 
-                    <div class="mt-3 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-0">Total:</h6>
-                            <div class="fw-semibold fs-4">Rp {{ number_format($order->price ?? 0, 0, ',', '.') }}</div>
+                    @php
+                        $selectedIds = [];
+                        if (!empty($order->service_ids)) {
+                            $decoded = json_decode($order->service_ids, true);
+                            if (is_array($decoded)) $selectedIds = $decoded;
+                        } elseif (!empty($order->service_id)) {
+                            $selectedIds = [$order->service_id];
+                        }
+                    @endphp
+
+                    <form id="servicesForm" action="{{ route('admin.orders.update-services', $order) }}" method="POST">
+                        @csrf
+                        <div class="list-group">
+                            @foreach($services as $s)
+                                <label class="list-group-item d-flex justify-content-between align-items-center service-item border-bottom py-2 px-3" data-service-id="{{ $s->id }}" style="cursor:pointer;">
+                                    <div class="d-flex align-items-center">
+                                        <input class="form-check-input me-3 service-checkbox" type="checkbox" name="service_ids[]" value="{{ $s->id }}" id="service_{{ $s->id }}" {{ in_array($s->id, $selectedIds) ? 'checked' : '' }} />
+                                        <div>
+                                            <div class="small fw-semibold mb-0">{{ $s->name }}</div>
+                                            <div class="small text-muted">Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }} / {{ $s->unit ?? 'satuan' }} · {{ $s->estimated_days }} hari</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <div class="small text-muted mb-0">Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }}</div>
+                                    </div>
+                                </label>
+                            @endforeach
                         </div>
 
-                        <div class="text-end">
-                            <div class="small text-muted">Status Saat Ini</div>
-                            <div class="fw-semibold" id="currentStatusLabel">{{ $order->status_display }}</div>
+                        <div class="mt-3">
+                            <label class="form-label">Deskripsi Item (opsional)</label>
+                            <textarea name="items_description" class="form-control" rows="2">{{ old('items_description', $order->items_description) }}</textarea>
                         </div>
-                    </div>
+
+                        <div class="mt-3 d-flex gap-2">
+                            <button type="submit" class="btn btn-gradient">Simpan Layanan</button>
+                            <button type="button" id="resetServicesBtn" class="btn btn-outline-secondary">Reset Pilihan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -254,6 +254,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateBtn.disabled = false;
                 updateBtn.textContent = 'Perbarui Status';
             });
+        });
+    }
+
+    // Service selection interactions
+    const serviceItems = document.querySelectorAll('.service-item');
+    const resetBtn = document.getElementById('resetServicesBtn');
+    const servicesForm = document.getElementById('servicesForm');
+
+    serviceItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            // If click was on the checkbox, let it handle itself
+            if (e.target.classList.contains('service-checkbox')) return;
+            const checkbox = this.querySelector('.service-checkbox');
+            if (checkbox) checkbox.checked = !checkbox.checked;
+        });
+    });
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+            document.querySelectorAll('.service-checkbox').forEach(cb => cb.checked = false);
+        });
+    }
+
+    if (servicesForm) {
+        servicesForm.addEventListener('submit', function() {
+            // disable submit to avoid double posts
+            servicesForm.querySelector('button[type="submit"]').disabled = true;
         });
     }
 });

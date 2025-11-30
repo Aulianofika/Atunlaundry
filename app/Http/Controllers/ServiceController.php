@@ -9,7 +9,9 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::orderBy('name')->paginate(10);
+        // show services in creation order (oldest first) so newly created
+        // services appear at the bottom of the list
+        $services = Service::orderBy('id')->paginate(10);
         return view('admin.services.index', compact('services'));
     }
 

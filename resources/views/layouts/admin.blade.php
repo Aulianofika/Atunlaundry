@@ -508,6 +508,18 @@
                         <span>Promosi</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.expenses.index') }}" class="nav-link {{ request()->routeIs('admin.expenses.*') ? 'active' : '' }}">
+                        <i class="fas fa-receipt"></i>
+                        <span>Pengeluaran</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.salaries.index') }}" class="nav-link {{ request()->routeIs('admin.salaries.*') ? 'active' : '' }}">
+                        <i class="fas fa-wallet"></i>
+                        <span>Gaji Karyawan</span>
+                    </a>
+                </li>
                 <!-- <li class="nav-item">
                     <a href="{{ route('admin.data.reports') }}" class="nav-link {{ request()->routeIs('admin.data.reports') ? 'active' : '' }}">
                         <i class="fas fa-chart-bar"></i>

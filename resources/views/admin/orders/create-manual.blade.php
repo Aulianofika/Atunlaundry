@@ -23,22 +23,32 @@
                         @csrf
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="service_id" class="form-label fw-semibold">Jenis Layanan <span class="text-danger">*</span></label>
-                                <select class="form-select shadow-sm @error('service_id') is-invalid @enderror" 
-                                        id="service_id" name="service_id" required>
-                                    <option value="">Pilih layanan</option>
+                            <div class="col-12 mb-3">
+                                <label class="form-label fw-semibold">Pilih Jenis Layanan <span class="text-danger">*</span></label>
+                                <div class="list-group service-list">
                                     @foreach($services as $service)
-                                        <option value="{{ $service->id }}" 
-                                                data-price="{{ $service->price_per_kg }}"
-                                                data-days="{{ $service->estimated_days }}"
-                                                {{ old('service_id') == $service->id ? 'selected' : '' }}>
-                                            {{ $service->name }} - Rp {{ number_format($service->price_per_kg, 0, ',', '.') }}/kg
-                                        </option>
+                                        <label class="list-group-item d-flex justify-content-between align-items-start">
+                                            <div class="d-flex align-items-start">
+                                                <input class="form-check-input me-2 service-checkbox" type="checkbox"
+                                                       name="service_ids[]" id="service_{{ $service->id }}"
+                                                       value="{{ $service->id }}"
+                                                       data-price="{{ $service->price_per_kg }}"
+                                                       data-days="{{ $service->estimated_days }}"
+                                                       {{ (is_array(old('service_ids')) && in_array($service->id, old('service_ids'))) ? 'checked' : '' }}>
+                                                <div>
+                                                    <strong>{{ $service->name }}</strong>
+                                                    <div class="small text-muted">Rp {{ number_format($service->price_per_kg, 0, ',', '.') }}/kg · {{ $service->estimated_days }} hari</div>
+                                                </div>
+                                            </div>
+                                            <div class="ms-2 text-end small text-muted">Rp {{ number_format($service->price_per_kg,0,',','.') }}</div>
+                                        </label>
                                     @endforeach
-                                </select>
-                                @error('service_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                </div>
+                                @error('service_ids')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                                @error('service_ids.*')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
@@ -91,6 +101,16 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="items_description" class="form-label fw-semibold">Deskripsi Barang (Opsional)</label>
+                            <textarea class="form-control shadow-sm @error('items_description') is-invalid @enderror" 
+                                      id="items_description" name="items_description" rows="2" 
+                                      placeholder="Contoh: 3 kemeja, 2 celana, 5 kaos">{{ old('items_description') }}</textarea>
+                            @error('items_description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
                             <label for="notes" class="form-label fw-semibold">Catatan Khusus (Opsional)</label>
                             <textarea class="form-control shadow-sm @error('notes') is-invalid @enderror" 
                                       id="notes" name="notes" rows="3" 
@@ -123,25 +143,28 @@
 {{-- JS untuk info harga layanan --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const serviceSelect = document.getElementById('service_id');
+    const checkboxes = document.querySelectorAll('.service-list .service-checkbox');
     const priceInfo = document.getElementById('price-info');
 
-    serviceSelect.addEventListener('change', function() {
-        const selected = this.options[this.selectedIndex];
-        if (selected.value) {
-            const price = selected.dataset.price;
-            const days = selected.dataset.days;
+    function updatePriceInfo() {
+        const firstChecked = Array.from(checkboxes).find(cb => cb.checked);
+        if (firstChecked) {
+            const price = firstChecked.dataset.price;
+            const days = firstChecked.dataset.days;
             priceInfo.classList.remove('d-none');
             priceInfo.innerHTML = `
                 <i class="bi bi-cash-coin me-2 text-purple"></i>
-                <strong>Harga:</strong> Rp ${parseInt(price).toLocaleString()} / kg |
+                <strong>Harga (contoh - pertama dipilih):</strong> Rp ${parseInt(price).toLocaleString()} / kg |
                 <strong>Estimasi:</strong> ${days} hari
             `;
         } else {
             priceInfo.classList.add('d-none');
             priceInfo.innerHTML = '';
         }
-    });
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updatePriceInfo));
+    updatePriceInfo();
 });
 </script>
 @endsection

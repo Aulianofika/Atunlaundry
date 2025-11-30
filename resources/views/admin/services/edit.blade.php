@@ -27,12 +27,28 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Nama Layanan</label>
-                    <input type="text" name="name" class="form-control" value="{{ $service->name }}" required>
+                    <input type="text" name="name" class="form-control" value="{{ old('name', $service->name) }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Harga (Rp)</label>
-                    <input type="number" name="price" class="form-control" value="{{ $service->price }}" required>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" name="price_per_kg" class="form-control" value="{{ old('price_per_kg', $service->price_per_kg) }}" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Satuan</label>
+                    <select name="unit" class="form-select">
+                        <option value="Per KG" {{ old('unit', $service->unit) == 'Per KG' ? 'selected' : '' }}>Per KG</option>
+                        <option value="Per Helai" {{ old('unit', $service->unit) == 'Per Helai' ? 'selected' : '' }}>Per Helai</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Estimasi Hari</label>
+                    <input type="number" name="estimated_days" class="form-control" value="{{ old('estimated_days', $service->estimated_days) }}" required>
                 </div>
 
                 <div class="mb-3">
@@ -68,3 +84,4 @@
     </div>
 </div>
 @endsection
+    

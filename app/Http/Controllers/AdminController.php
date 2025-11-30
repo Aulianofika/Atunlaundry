@@ -80,7 +80,37 @@ class AdminController extends Controller
 
         $order->load(['service', 'user']);
 
-        return view('admin.orders.show', compact('order'));
+        // also load active services so admin can change service selection
+        $services = Service::where('is_active', true)->orderBy('id')->get();
+
+        return view('admin.orders.show', compact('order', 'services'));
+    }
+
+    public function updateOrderServices(Request $request, Order $order)
+    {
+        $this->checkAdmin();
+
+        $request->validate([
+            'service_ids' => 'nullable|array',
+            'service_ids.*' => 'exists:services,id',
+            'items_description' => 'nullable|string',
+        ]);
+
+        $ids = array_values(array_filter($request->input('service_ids', [])));
+
+        $order->service_ids = $ids ? json_encode($ids) : null;
+        $order->service_id = $ids[0] ?? $order->service_id;
+        if ($request->filled('items_description')) {
+            $order->items_description = $request->input('items_description');
+        }
+
+        $order->save();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['success' => true, 'service_ids' => $ids]);
+        }
+
+        return back()->with('success', 'Layanan pada pesanan diperbarui.');
     }
 
     public function printOrder(Order $order)
@@ -166,7 +196,8 @@ class AdminController extends Controller
     public function createManualOrder()
     {
         $this->checkAdmin();
-        $services = Service::where('is_active', true)->get();
+        // return services in creation order so newest services appear last
+        $services = Service::where('is_active', true)->orderBy('id')->get();
         return view('admin.orders.create-manual', compact('services'));
     }
 
@@ -174,17 +205,24 @@ class AdminController extends Controller
     {
         $this->checkAdmin();
         $request->validate([
-            'service_id' => 'required|exists:services,id',
+            'service_ids' => 'required|array|min:1',
+            'service_ids.*' => 'exists:services,id',
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
             'customer_address' => 'required|string',
             'pickup_method' => 'required|in:pickup,delivery',
             'notes' => 'nullable|string',
+            'items_description' => 'nullable|string',
         ]);
+
+        $ids = $request->input('service_ids', []);
+        $firstServiceId = count($ids) ? $ids[0] : null;
 
         $order = Order::create([
             'order_code' => Order::generateOrderCode(),
-            'service_id' => $request->service_id,
+            'service_id' => $firstServiceId,
+            'service_ids' => json_encode($ids),
+            'items_description' => $request->input('items_description'),
             'order_type' => 'manual',
             'customer_name' => $request->customer_name,
             'customer_phone' => $request->customer_phone,
