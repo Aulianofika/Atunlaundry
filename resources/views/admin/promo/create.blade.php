@@ -15,6 +15,7 @@
         </div>
 
         <div class="card-body p-4">
+            
             <form action="{{ route('promotions.store') }}" method="POST">
                 @csrf
                 <div class="row g-3">
