@@ -247,9 +247,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     const errorMessage = data.message || (data.errors ? Object.values(data.errors).join(', ') : 'Terjadi kesalahan saat mengupdate status.');
                     alert('Error: ' + errorMessage);
                 }
-            }).catch(err => {
-                console.error('Fetch Error:', err);
-                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+            // }).catch(err => {
+            //     console.error('Fetch Error:', err);
+            //     alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
             }).finally(() => {
                 updateBtn.disabled = false;
                 updateBtn.textContent = 'Perbarui Status';
