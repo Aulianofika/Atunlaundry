@@ -159,11 +159,11 @@
 
         <div class="col-lg-4">
             <div class="card">
-                <div class="card-body">
+                    <div class="card-body">
                     <h6 class="fw-semibold">Ringkasan</h6>
                     <p class="mb-1"><strong>Order Code:</strong> {{ $order->order_code }}</p>
                     <p class="mb-1"><strong>Metode Pickup:</strong> {{ ucfirst($order->pickup_method) }}</p>
-                    <p class="mb-1"><strong>Waktu Pesanan:</strong> {{ $order->created_at->format('d M Y H:i') }}</p>
+                    <p class="mb-1"><strong>Waktu Pesanan:</strong> <span class="order-date" data-datetime="{{ $order->created_at->toIsoString() }}">{{ $order->created_at->format('d M Y H:i:s') }}</span></p>
 
                     <hr>
 
@@ -283,6 +283,23 @@ document.addEventListener('DOMContentLoaded', function() {
             servicesForm.querySelector('button[type="submit"]').disabled = true;
         });
     }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function updateOrderDates() {
+        document.querySelectorAll('.order-date').forEach(function(el) {
+            const dt = el.getAttribute('data-datetime');
+            if (!dt) return;
+            const d = new Date(dt);
+            if (isNaN(d)) return;
+            const opts = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            el.textContent = d.toLocaleString(undefined, opts);
+        });
+    }
+    updateOrderDates();
+    setInterval(updateOrderDates, 1000);
 });
 </script>
 @endsection

@@ -43,7 +43,9 @@
                             <p><strong>Name:</strong> {{ $order->customer_name }}</p>
                             <p><strong>Phone:</strong> {{ $order->customer_phone }}</p>
                             <p><strong>Address:</strong> {{ $order->customer_address }}</p>
-                            <p><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y H:i') }}</p>
+                            <p><strong>Order Date:</strong>
+                                <span class="order-date" data-datetime="{{ $order->created_at->toIsoString() }}">{{ $order->created_at->format('M d, Y H:i:s') }}</span>
+                            </p>
                             @if($order->estimated_completion)
                                 <p><strong>Est. Completion:</strong> 
                                     {{ $order->estimated_completion->format('M d, Y H:i') }}
@@ -253,4 +255,24 @@
     flex: 1;
 }
 </style>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function updateOrderDates() {
+        document.querySelectorAll('.order-date').forEach(function(el) {
+            const dt = el.getAttribute('data-datetime');
+            if (!dt) return;
+            const d = new Date(dt);
+            if (isNaN(d)) return;
+            // Format: Dec 17, 2025 16:05:23 (locale-aware)
+            const opts = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            el.textContent = d.toLocaleString(undefined, opts);
+        });
+    }
+    updateOrderDates();
+    setInterval(updateOrderDates, 1000);
+});
+</script>
 @endsection
