@@ -260,15 +260,29 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    function formatRelative(d) {
+        const now = new Date();
+        let diff = Math.floor((now - d) / 1000); // seconds
+        if (diff < 0) diff = 0;
+        const days = Math.floor(diff / 86400); diff %= 86400;
+        const hours = Math.floor(diff / 3600); diff %= 3600;
+        const minutes = Math.floor(diff / 60); const seconds = diff % 60;
+        if (days > 0) return `${days}d ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')} ago`;
+        if (hours > 0) return `${hours}h ${String(minutes).padStart(2,'0')}m ${String(seconds).padStart(2,'0')}s ago`;
+        if (minutes > 0) return `${minutes}m ${String(seconds).padStart(2,'0')}s ago`;
+        return `${seconds}s ago`;
+    }
+
     function updateOrderDates() {
         document.querySelectorAll('.order-date').forEach(function(el) {
             const dt = el.getAttribute('data-datetime');
             if (!dt) return;
             const d = new Date(dt);
             if (isNaN(d)) return;
-            // Format: Dec 17, 2025 16:05:23 (locale-aware)
             const opts = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            el.textContent = d.toLocaleString(undefined, opts);
+            const ts = d.toLocaleString(undefined, opts);
+            const rel = formatRelative(d);
+            el.innerHTML = `${ts} <small class="text-muted">(${rel})</small>`;
         });
     }
     updateOrderDates();
