@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Create New Order')
+@section('title', 'Buat Pesanan Baru')
 
 @section('content')
 <div class="container py-5">
@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header text-center">
                     <h4 class="mb-0">
-                        <i class="fas fa-plus me-2"></i>Create New Order
+                        <i class="fas fa-plus me-2"></i>Buat Pesanan Baru
                     </h4>
                 </div>
                 <div class="card-body p-4">
@@ -47,12 +47,12 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="pickup_method" class="form-label">Pickup Method <span class="text-danger">*</span></label>
+                                    <label for="pickup_method" class="form-label">Metode Penjemputan <span class="text-danger">*</span></label>
                                     <select class="form-select @error('pickup_method') is-invalid @enderror" 
                                             id="pickup_method" name="pickup_method" required>
-                                        <option value="">Select pickup method</option>
-                                        <option value="pickup" {{ old('pickup_method') === 'pickup' ? 'selected' : '' }}>Pickup at Store</option>
-                                        <option value="delivery" {{ old('pickup_method') === 'delivery' ? 'selected' : '' }}>Home Delivery</option>
+                                        <option value="">Pilih metode penjemputan</option>
+                                        <option value="pickup" {{ old('pickup_method') === 'pickup' ? 'selected' : '' }}>Ambil di Toko</option>
+                                        <option value="delivery" {{ old('pickup_method') === 'delivery' ? 'selected' : '' }}>Antar ke Rumah</option>
                                     </select>
                                     @error('pickup_method')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -64,7 +64,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="customer_name" class="form-label">Your Name <span class="text-danger">*</span></label>
+                                    <label for="customer_name" class="form-label">Nama Anda <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('customer_name') is-invalid @enderror" 
                                            id="customer_name" name="customer_name" value="{{ old('customer_name', Auth::user()->name) }}" required>
                                     @error('customer_name')
@@ -74,7 +74,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="customer_phone" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                    <label for="customer_phone" class="form-label">Nomor Telepon <span class="text-danger">*</span></label>
                                     <input type="tel" class="form-control @error('customer_phone') is-invalid @enderror" 
                                            id="customer_phone" name="customer_phone" value="{{ old('customer_phone', Auth::user()->phone) }}" required>
                                     @error('customer_phone')
@@ -85,10 +85,10 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="customer_address" class="form-label">Address <span class="text-danger">*</span></label>
+                            <label for="customer_address" class="form-label">Alamat <span class="text-danger">*</span></label>
                             <textarea class="form-control @error('customer_address') is-invalid @enderror" 
                                       id="customer_address" name="customer_address" rows="3" required 
-                                      placeholder="Enter your complete address">{{ old('customer_address') }}</textarea>
+                                      placeholder="Masukkan alamat lengkap Anda">{{ old('customer_address') }}</textarea>
                             @error('customer_address')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -105,7 +105,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="notes" class="form-label">Special Instructions (Optional)</label>
+                            <label for="notes" class="form-label">Instruksi Khusus (Opsional)</label>
                             <textarea class="form-control @error('notes') is-invalid @enderror" 
                                       id="notes" name="notes" rows="3" 
                                       placeholder="Any special instructions for your laundry order">{{ old('notes') }}</textarea>
@@ -124,20 +124,20 @@
                             <div class="form-text">You can optionally upload your payment receipt now. Accepted: JPG, PNG, GIF. Max 2MB.</div>
                         </div> -->
                         
-                          <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Important:</strong> Setelah membuat pesanan, Anda akan menerima kode pesanan.
+                                                    <div class="alert alert-info">
+                                                        <i class="fas fa-info-circle me-2"></i>
+                                                        <strong>Penting:</strong> Setelah membuat pesanan, Anda akan menerima kode pesanan.
 Harap simpan kode ini dengan aman karena Anda akan membutuhkannya untuk melacak status pesanan.
 Harga akhir akan dihitung berdasarkan berat cucian Anda yang sebenarnya.
-                        </div>
+                                                </div>
 
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary me-md-2">
-                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                                <i class="fas fa-arrow-left me-2"></i>Batal
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check me-2"></i>Create Order
+                                <i class="fas fa-check me-2"></i>Buat Pesanan
                             </button>
                         </div>
                     </form>

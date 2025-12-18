@@ -90,8 +90,8 @@
 
                       <div id="viewPreview" class="mb-3 {{ $order->view_proof ? '' : 'd-none' }}">
                             @if($order->view_proof)
-                                <div class="mb-2">Preview saat ini:</div>
-                                <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" alt="View Proof" style="max-width:200px;" class="img-thumbnail">
+                                <div class="mb-2">Pratinjau saat ini:</div>
+                                <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" alt="Bukti Timbangan" style="max-width:200px;" class="img-thumbnail">
                                 <div class="mt-2">
                                     <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Lihat Gambar</a>
                                     <button type="button" id="changeViewBtn" class="btn btn-outline-secondary btn-sm">Ganti Gambar</button>
@@ -114,8 +114,8 @@
 
                         @if($order->payment_proof)
                             <div class="mb-3">
-                                <p class="mb-1"><strong>File:</strong></p>
-                                <img src="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" alt="Payment Proof" class="img-thumbnail" style="max-width:300px;" />
+                                <p class="mb-1"><strong>Berkas:</strong></p>
+                                <img src="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" alt="Bukti Pembayaran" class="img-thumbnail" style="max-width:300px;" />
                             </div>
 
                             <div class="d-flex gap-2">
@@ -161,7 +161,7 @@
             <div class="card">
                     <div class="card-body">
                     <h6 class="fw-semibold">Ringkasan</h6>
-                    <p class="mb-1"><strong>Order Code:</strong> {{ $order->order_code }}</p>
+                    <p class="mb-1"><strong>Kode Pesanan:</strong> {{ $order->order_code }}</p>
                     <p class="mb-1"><strong>Metode Pickup:</strong> {{ ucfirst($order->pickup_method) }}</p>
                     <p class="mb-1"><strong>Waktu Pesanan:</strong> <span class="order-date" data-datetime="{{ $order->created_at->toIsoString() }}">{{ $order->created_at->format('d M Y H:i:s') }}</span></p>
 
@@ -193,11 +193,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const img = document.createElement('img');
             img.className = 'img-thumbnail';
             img.style.maxWidth = '200px';
-            img.alt = 'Preview';
+            img.alt = 'Pratinjau';
 
             const reader = new FileReader();
             reader.onload = function(ev) {
-                preview.innerHTML = '<div class="mb-2">Preview baru:</div>';
+                preview.innerHTML = '<div class="mb-2">Pratinjau baru:</div>';
                 img.src = ev.target.result;
                 preview.appendChild(img);
                 preview.style.display = 'block';

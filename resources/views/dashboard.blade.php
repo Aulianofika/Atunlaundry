@@ -8,10 +8,10 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="display-6 fw-bold">
-                    <i class="fas fa-tachometer-alt me-2"></i>Welcome back, {{ Auth::user()->name }}!
+                    <i class="fas fa-tachometer-alt me-2"></i>Selamat datang, {{ Auth::user()->name }}!
                 </h2>
                 <a href="{{ route('orders.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>New Order
+                    <i class="fas fa-plus me-2"></i>Pesan Baru
                 </a>
             </div>
         </div>
@@ -23,7 +23,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <i class="fas fa-tshirt fa-2x text-primary mb-3"></i>
-                    <h5 class="card-title">Total Orders</h5>
+                    <h5 class="card-title">Total Pesanan</h5>
                     <h3 class="text-primary">{{ $orders->total() }}</h3>
                 </div>
             </div>
@@ -32,7 +32,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <i class="fas fa-clock fa-2x text-warning mb-3"></i>
-                    <h5 class="card-title">Pending Orders</h5>
+                    <h5 class="card-title">Pesanan Menunggu</h5>
                     <h3 class="text-warning">{{ $orders->whereIn('status', ['waiting_for_pickup', 'picked_and_weighed', 'waiting_for_payment', 'waiting_for_admin_verification'])->count() }}</h3>
                 </div>
             </div>
@@ -41,7 +41,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
-                    <h5 class="card-title">Completed Orders</h5>
+                    <h5 class="card-title">Pesanan Selesai</h5>
                     <h3 class="text-success">{{ $orders->where('status', 'completed')->count() }}</h3>
                 </div>
             </div>
@@ -50,7 +50,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <i class="fas fa-dollar-sign fa-2x text-info mb-3"></i>
-                    <h5 class="card-title">Total Spent</h5>
+                    <h5 class="card-title">Total Pendapatan</h5>
                     <h3 class="text-info">Rp {{ number_format($orders->where('status', 'completed')->sum('price'), 0, ',', '.') }}</h3>
                 </div>
             </div>
@@ -63,10 +63,10 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-list me-2"></i>Recent Orders
+                        <i class="fas fa-list me-2"></i>Pesanan Terbaru
                     </h5>
                     <a href="{{ route('orders.index') }}" class="btn btn-outline-primary btn-sm">
-                        View All Orders
+                        Lihat Semua Pesanan
                     </a>
                 </div>
                 <div class="card-body p-0">
@@ -75,12 +75,12 @@
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Order Code</th>
-                                        <th>Service</th>
+                                        <th>Kode Pesanan</th>
+                                        <th>Layanan</th>
                                         <th>Status</th>
-                                        <th>Price</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
+                                        <th>Harga</th>
+                                        <th>Tanggal</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -99,10 +99,10 @@
                                                 Rp {{ number_format($order->price, 0, ',', '.') }}
                                         <td>
                                             @else
-                                                <span class="text-muted">TBD</span>
+                                                <span class="text-muted">Belum ditentukan</span>
                                             @endif
                                         </td>
-                                        <td>{{ $order->created_at->format('M d, Y') }}</td>
+                                        <td>{{ $order->created_at->format('M d, Y H:i') }}</td>
                                         <td>
                                             <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-primary btn-sm">
                                                 <i class="fas fa-eye"></i>
@@ -116,10 +116,10 @@
                     @else
                         <div class="text-center py-5">
                             <i class="fas fa-tshirt fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No orders yet</h5>
-                            <p class="text-muted">Create your first order to get started!</p>
+                            <h5 class="text-muted">Belum ada pesanan</h5>
+                            <p class="text-muted">Buat pesanan pertama untuk memulai!</p>
                             <a href="{{ route('orders.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus me-2"></i>Create Order
+                                <i class="fas fa-plus me-2"></i>Buat Pesanan
                             </a>
                         </div>
                     @endif
