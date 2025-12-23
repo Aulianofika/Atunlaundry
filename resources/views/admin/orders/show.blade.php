@@ -433,13 +433,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     statusLabel.textContent = data.status_display || newStatus;
                     alert('Status diperbarui: ' + (data.status_display || newStatus));
                 } else {
-                    // Handle validation errors or other server errors
                     const errorMessage = data.message || (data.errors ? Object.values(data.errors).join(', ') : 'Terjadi kesalahan saat mengupdate status.');
                     alert('Error: ' + errorMessage);
                 }
-            // }).catch(err => {
-            //     console.error('Fetch Error:', err);
-            //     alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+            }).catch(err => {
+                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
             }).finally(() => {
                 updateBtn.disabled = false;
                 updateBtn.textContent = 'Perbarui Status';
