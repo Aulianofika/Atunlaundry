@@ -3,6 +3,58 @@
 @section('title', 'Detail Pesanan - ' . $order->order_code)
 @section('page-title', 'Kelola Pesanan')
 
+@section('styles')
+<style>
+/* Service Card Grid */
+.service-card-item {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+.service-card-item:hover {
+    border-color: #2E7D32;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46,125,50,0.15);
+}
+.service-card-item.selected {
+    border-color: #2E7D32;
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+}
+.service-card-item.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    background: #2E7D32;
+    color: #fff;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.service-card-item {
+    position: relative;
+}
+.service-icon-mini {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+}
+.service-icon-mini i {
+    font-size: 18px;
+    color: #2E7D32;
+}
+</style>
+@endsection
+
 @section('content')
 <div class="container-fluid mt-3">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -39,21 +91,48 @@
 
                     <form id="servicesForm" action="{{ route('admin.orders.update-services', $order) }}" method="POST">
                         @csrf
-                        <div class="list-group">
+                        <div class="row g-2">
                             @foreach($services as $s)
-                                <label class="list-group-item d-flex justify-content-between align-items-center service-item border-bottom py-2 px-3" data-service-id="{{ $s->id }}" style="cursor:pointer;">
-                                    <div class="d-flex align-items-center">
-                                        <input class="form-check-input me-3 service-checkbox" type="checkbox" name="service_ids[]" value="{{ $s->id }}" id="service_{{ $s->id }}" {{ in_array($s->id, $selectedIds) ? 'checked' : '' }} />
-                                        <div>
-                                            <div class="small fw-semibold mb-0">{{ $s->name }}</div>
-                                            <div class="small text-muted">Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }} / {{ $s->unit ?? 'satuan' }} · {{ $s->estimated_days }} hari</div>
+                                <div class="col-lg-4 col-md-6 col-6">
+                                    <label class="card h-100 service-card-item {{ in_array($s->id, $selectedIds) ? 'selected' : '' }}" 
+                                           data-service-id="{{ $s->id }}" style="cursor:pointer;">
+                                        <input class="form-check-input d-none service-checkbox" type="checkbox" 
+                                               name="service_ids[]" value="{{ $s->id }}" id="service_{{ $s->id }}" 
+                                               {{ in_array($s->id, $selectedIds) ? 'checked' : '' }} />
+                                        <div class="card-body text-center p-2">
+                                            <div class="service-icon-mini mx-auto mb-1">
+                                                @if(str_contains(strtolower($s->name), 'selimut'))
+                                                    <i class="fas fa-cloud"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'bed cover'))
+                                                    <i class="fas fa-bed"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'seprei'))
+                                                    <i class="fas fa-layer-group"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'gorden'))
+                                                    <i class="fas fa-window-maximize"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'handuk'))
+                                                    <i class="fas fa-bath"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'setrika'))
+                                                    <i class="fas fa-fire-alt"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'cuci'))
+                                                    <i class="fas fa-water"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'jaket'))
+                                                    <i class="fas fa-user-tie"></i>
+                                                @elseif(str_contains(strtolower($s->name), 'family'))
+                                                    <i class="fas fa-users"></i>
+                                                @else
+                                                    <i class="fas fa-tshirt"></i>
+                                                @endif
+                                            </div>
+                                            <div class="fw-semibold small">{{ $s->name }}</div>
+                                            <div class="text-muted" style="font-size: 0.7rem;">
+                                                Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }} / {{ $s->unit ?? 'satuan' }}
+                                            </div>
+                                            <div class="text-muted" style="font-size: 0.65rem;">
+                                                <i class="fas fa-clock me-1"></i>{{ $s->estimated_days }} hari
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div class="text-end">
-                                        <div class="small text-muted mb-0">Rp {{ number_format($s->price_per_kg ?? 0, 0, ',', '.') }}</div>
-                                    </div>
-                                </label>
+                                    </label>
+                                </div>
                             @endforeach
                         </div>
 
