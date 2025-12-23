@@ -250,7 +250,9 @@
 
                 <button id="updateStatusBtn" class="btn btn-gradient mt-4">Perbarui Status</button>
 
-                <a href="{{ route('admin.orders.print', $order) }}" target="_blank" class="btn btn-outline-secondary mt-4">Cetak Struk</a>
+                <button type="button" class="btn btn-outline-secondary mt-4" data-bs-toggle="modal" data-bs-target="#adminOrderPrintModal">
+                    <i class="fas fa-print me-1"></i>Cetak Struk
+                </button>
             </div>
         </div>
 
@@ -261,6 +263,7 @@
                     <p class="mb-1"><strong>Kode Pesanan:</strong> {{ $order->order_code }}</p>
                     <p class="mb-1"><strong>Metode Pickup:</strong> {{ ucfirst($order->pickup_method) }}</p>
                     <p class="mb-1"><strong>Waktu Pesanan:</strong> <span class="order-date" data-datetime="{{ $order->created_at->toIsoString() }}">{{ $order->created_at->format('d M Y H:i:s') }}</span></p>
+                    <p class="mb-1"><strong>Status:</strong> <span id="currentStatusLabel" class="badge status-{{ str_replace('_', '-', $order->status) }}">{{ $order->status_display }}</span></p>
 
                     <hr>
 
@@ -365,6 +368,31 @@
     transition: transform 0.3s ease;
 }
 </style>
+
+
+<!-- Print Modal -->
+<div class="modal fade" id="adminOrderPrintModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header bg-gradient-success text-white border-0 rounded-top-4">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-print me-2"></i>Cetak Struk
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0" style="height: 500px;">
+                <iframe id="printFrame" src="{{ route('admin.orders.print', $order) }}" style="width:100%; height:100%; border:none;"></iframe>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-success rounded-pill px-4" onclick="document.getElementById('printFrame').contentWindow.print()">
+                    <i class="fas fa-print me-2"></i>Cetak Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -407,11 +435,86 @@ document.addEventListener('DOMContentLoaded', function() {
     const statusSelect = document.getElementById('statusSelect');
     const statusLabel = document.getElementById('currentStatusLabel');
 
+    // Create toast container if not exists
+    if (!document.getElementById('toastContainer')) {
+        const toastContainer = document.createElement('div');
+        toastContainer.id = 'toastContainer';
+        toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999;';
+        document.body.appendChild(toastContainer);
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.style.cssText = `
+            background: ${type === 'success' ? 'linear-gradient(135deg, #2E7D32, #1B5E20)' : 'linear-gradient(135deg, #dc3545, #c82333)'};
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            animation: slideIn 0.4s ease-out;
+            min-width: 280px;
+            max-width: 400px;
+            white-space: pre-wrap;
+        `;
+        
+        const icon = type === 'success' ? '✓' : '✕';
+        toast.innerHTML = `
+            <span style="background: rgba(255,255,255,0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">${icon}</span>
+            <span>${message}</span>
+        `;
+        
+        document.getElementById('toastContainer').appendChild(toast);
+        
+        // Play sound
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.frequency.value = type === 'success' ? 800 : 400;
+            oscillator.type = 'sine';
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        } catch(e) {}
+        
+        // Auto remove
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // Add CSS animation
+    if (!document.getElementById('toastStyles')) {
+        const style = document.createElement('style');
+        style.id = 'toastStyles';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     if (updateBtn && statusSelect) {
         updateBtn.addEventListener('click', function() {
             const newStatus = statusSelect.value;
             updateBtn.disabled = true;
-            updateBtn.textContent = 'Menyimpan...';
+            updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...';
             
             const url = '{{ route("admin.orders.update-status", $order) }}';
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -428,19 +531,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: fd
             }).then(async (response) => {
-                const data = await response.json();
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error('Server returned non-JSON:', text);
+                    throw new Error('Server returned invalid response: ' + text.substring(0, 100));
+                }
+
                 if (response.ok && data.success) {
                     statusLabel.textContent = data.status_display || newStatus;
-                    alert('Status diperbarui: ' + (data.status_display || newStatus));
+                    showToast('Status berhasil diperbarui: ' + (data.status_display || newStatus), 'success');
                 } else {
                     const errorMessage = data.message || (data.errors ? Object.values(data.errors).join(', ') : 'Terjadi kesalahan saat mengupdate status.');
-                    alert('Error: ' + errorMessage);
+                    showToast('Error: ' + errorMessage, 'error');
                 }
             }).catch(err => {
-                alert('Terjadi kesalahan jaringan. Silakan coba lagi.');
+                console.error('Error updating status:', err);
+                showToast('Gagal: ' + err.message, 'error');
             }).finally(() => {
                 updateBtn.disabled = false;
-                updateBtn.textContent = 'Perbarui Status';
+                updateBtn.innerHTML = 'Perbarui Status';
             });
         });
     }

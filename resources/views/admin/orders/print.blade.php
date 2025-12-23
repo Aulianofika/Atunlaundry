@@ -12,8 +12,16 @@
         .items td { padding: 6px 0; }
         .total { font-weight: 700; font-size: 1.1rem; }
         .muted { color: #666; font-size: 0.9rem; }
-        .print-btn { display:block; margin: 12px auto; padding: 10px 18px; background:#6a1b9a; color:white; text-decoration:none; border-radius:6px; text-align:center; }
+        .print-btn { display:block; margin: 12px auto; padding: 10px 18px; background:#2E7D32; color:white; text-decoration:none; border-radius:6px; text-align:center; }
+        @media print { .print-btn { display: none; } }
     </style>
+    <script>
+        window.onload = function() {
+            if (window.self !== window.top) {
+                document.querySelector('.print-btn').style.display = 'none';
+            }
+        };
+    </script>
 </head>
 <body>
     <div class="receipt">
