@@ -39,22 +39,28 @@ class AdminController extends Controller
         // Get online customers (users with role 'customer')
         $onlineCustomers = User::where('role', 'customer')->get()->map(function ($user) {
             return (object) [
+                'id' => $user->id,
                 'name' => $user->name,
                 'contact' => $user->email,
+                'phone' => $user->phone ?? '',
                 'type' => 'Online',
+                'is_user' => true,
             ];
         });
 
-        // Get manual customers (distinct by phone number)
+        // Get manual customers (distinct by phone number) - these can't be edited/deleted as users
         $manualCustomers = Order::where('order_type', 'manual')
             ->select('customer_name', 'customer_phone')
             ->distinct('customer_phone')
             ->get()
             ->map(function ($order) {
                 return (object) [
+                    'id' => null,
                     'name' => $order->customer_name,
                     'contact' => $order->customer_phone,
+                    'phone' => $order->customer_phone,
                     'type' => 'Manual',
+                    'is_user' => false,
                 ];
             });
 
@@ -288,5 +294,41 @@ class AdminController extends Controller
         $order->delete();
 
         return redirect()->route('admin.orders')->with('success', 'Order deleted successfully!');
+    }
+
+    public function updateCustomer(Request $request, User $user)
+    {
+        $this->checkAdmin();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email ?? $user->email,
+            'phone' => $request->phone,
+        ]);
+
+        return back()->with('success', 'Data pelanggan berhasil diperbarui.');
+    }
+
+    public function destroyCustomer(User $user)
+    {
+        $this->checkAdmin();
+
+        // Don't delete admin users
+        if ($user->role === 'admin') {
+            return back()->with('error', 'Tidak dapat menghapus akun admin.');
+        }
+
+        // Delete related orders first (optional - or you might want to keep orders)
+        // $user->orders()->delete();
+
+        $user->delete();
+
+        return back()->with('success', 'Pelanggan berhasil dihapus.');
     }
 }

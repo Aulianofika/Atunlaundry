@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Salary;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class SalaryController extends Controller
@@ -12,14 +13,26 @@ class SalaryController extends Controller
         $this->checkAdmin();
         $salaries = Salary::orderBy('year', 'desc')->orderBy('month', 'desc')->paginate(15);
         $totalSalaries = Salary::sum('total_salary');
+        $totalKgCompleted = Salary::sum('total_kg_completed');
         
-        return view('admin.salaries.index', compact('salaries', 'totalSalaries'));
+        return view('admin.salaries.index', compact('salaries', 'totalSalaries', 'totalKgCompleted'));
     }
 
     public function create()
     {
         $this->checkAdmin();
-        return view('admin.salaries.create');
+        
+        // Get current month's completed orders for reference
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        
+        // Get total kg from completed orders this month
+        $monthlyKgCompleted = Order::where('status', 'completed')
+            ->whereMonth('updated_at', $currentMonth)
+            ->whereYear('updated_at', $currentYear)
+            ->sum('weight');
+            
+        return view('admin.salaries.create', compact('monthlyKgCompleted', 'currentMonth', 'currentYear'));
     }
 
     public function store(Request $request)
@@ -28,16 +41,19 @@ class SalaryController extends Controller
         $request->validate([
             'employee_name' => 'required|string|max:255',
             'position' => 'required|string|max:100',
-            'base_salary' => 'required|numeric|min:0',
-            'allowance' => 'nullable|numeric|min:0',
-            'deduction' => 'nullable|numeric|min:0',
+            'total_kg_completed' => 'required|numeric|min:0',
+            'rate_per_kg' => 'required|numeric|min:0',
+            'bonus' => 'nullable|numeric|min:0',
             'month' => 'required|integer|min:1|max:12',
             'year' => 'required|integer|min:2020|max:2100',
             'status' => 'required|in:pending,paid',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         $data = $request->all();
-        $data['total_salary'] = $data['base_salary'] + ($data['allowance'] ?? 0) - ($data['deduction'] ?? 0);
+        $data['bonus'] = $data['bonus'] ?? 0;
+        // Calculate total salary: (kg * rate) + bonus
+        $data['total_salary'] = ($data['total_kg_completed'] * $data['rate_per_kg']) + $data['bonus'];
 
         Salary::create($data);
 
@@ -56,16 +72,19 @@ class SalaryController extends Controller
         $request->validate([
             'employee_name' => 'required|string|max:255',
             'position' => 'required|string|max:100',
-            'base_salary' => 'required|numeric|min:0',
-            'allowance' => 'nullable|numeric|min:0',
-            'deduction' => 'nullable|numeric|min:0',
+            'total_kg_completed' => 'required|numeric|min:0',
+            'rate_per_kg' => 'required|numeric|min:0',
+            'bonus' => 'nullable|numeric|min:0',
             'month' => 'required|integer|min:1|max:12',
             'year' => 'required|integer|min:2020|max:2100',
             'status' => 'required|in:pending,paid',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         $data = $request->all();
-        $data['total_salary'] = $data['base_salary'] + ($data['allowance'] ?? 0) - ($data['deduction'] ?? 0);
+        $data['bonus'] = $data['bonus'] ?? 0;
+        // Calculate total salary: (kg * rate) + bonus
+        $data['total_salary'] = ($data['total_kg_completed'] * $data['rate_per_kg']) + $data['bonus'];
 
         $salary->update($data);
 
@@ -77,6 +96,29 @@ class SalaryController extends Controller
         $this->checkAdmin();
         $salary->delete();
         return redirect()->route('admin.salaries.index')->with('success', 'Gaji karyawan berhasil dihapus!');
+    }
+
+    /**
+     * Get completed kg for a specific employee in a month/year
+     * This can be called via AJAX to auto-fill kg data
+     */
+    public function getMonthlyKg(Request $request)
+    {
+        $this->checkAdmin();
+        
+        $month = $request->input('month', now()->month);
+        $year = $request->input('year', now()->year);
+        
+        $totalKg = Order::where('status', 'completed')
+            ->whereMonth('updated_at', $month)
+            ->whereYear('updated_at', $year)
+            ->sum('weight');
+            
+        return response()->json([
+            'total_kg' => $totalKg,
+            'month' => $month,
+            'year' => $year
+        ]);
     }
 
     protected function checkAdmin()

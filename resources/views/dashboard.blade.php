@@ -89,7 +89,7 @@
                                         <td>
                                             <strong>{{ $order->order_code }}</strong>
                                         </td>
-                                        <td>{{ $order->service->name }}</td>
+                                        <td>{{ $order->service->name ?? 'Layanan tidak tersedia' }}</td>
                                         <td>
                                             <span class="badge status-{{ str_replace('_', '-', $order->status) }}">
                                                 {{ $order->status_display }}

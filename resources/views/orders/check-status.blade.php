@@ -50,7 +50,7 @@
                                                 <p><strong>Order Code:</strong> {{ $order->order_code }}</p>
                                                 <p><strong>Customer:</strong> {{ $order->customer_name }}</p>
                                                 <p><strong>Phone:</strong> {{ $order->customer_phone }}</p>
-                                                <p><strong>Service:</strong> {{ $order->service->name }}</p>
+                                                <p><strong>Service:</strong> {{ $order->service->name ?? 'Layanan tidak tersedia' }}</p>
                                                 <p><strong>Order Type:</strong> 
                                                     <span class="badge {{ $order->order_type === 'login' ? 'bg-primary' : 'bg-secondary' }}">
                                                         {{ ucfirst($order->order_type) }}

@@ -30,7 +30,7 @@
                         <div class="col-md-6">
                             <h6 class="fw-bold">Detail Pesanan</h6>
                             <p><strong>Kode Pesanan:</strong> {{ $order->order_code }}</p>
-                            <p><strong>Layanan:</strong> {{ $order->service->name }}</p>
+                            <p><strong>Layanan:</strong> {{ $order->service->name ?? 'Layanan tidak tersedia' }}</p>
                             <p><strong>Metode Penjemputan:</strong> {{ ucfirst($order->pickup_method) }}</p>
                             <p><strong>Status:</strong> 
                                 <span class="badge status-{{ str_replace('_', '-', $order->status) }} fs-6">
@@ -75,7 +75,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Berat:</strong> {{ $order->weight }} kg</p>
-                            <p><strong>Harga per kg:</strong> Rp {{ number_format($order->service->price_per_kg, 0, ',', '.') }}</p>
+                            <p><strong>Harga per kg:</strong> Rp {{ number_format($order->service->price_per_kg ?? 0, 0, ',', '.') }}</p>
                             <p><strong>Total Harga:</strong> Rp {{ number_format($order->price, 0, ',', '.') }}</p>
                         </div>
                         <div class="col-md-6">
@@ -90,10 +90,10 @@
                             </p>
                             @if($order->payment_proof)
                                 <p><strong>Bukti Pembayaran:</strong> 
-                                    <a href="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" 
-                                       target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" 
+                                            data-bs-toggle="modal" data-bs-target="#paymentProofModal">
                                         <i class="fas fa-eye me-1"></i>Lihat Bukti
-                                    </a>
+                                    </button>
                                 </p>
                             @endif
                         </div>
@@ -116,19 +116,11 @@
                     @endif
 
                     @if($order->view_proof)
-    <p class="mb-2 fw-semibold text-dark">Bukti Timbangan:</p>
-    
-    
-    <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}"
-       target="_blank"
-       class="btn btn-outline-success rounded-pill px-4 py-2">
-        <i class="fas fa-eye me-2"></i>Lihat Bukti Timbangan
-    </a>
-
-    <p class="text-muted small mt-2">
-        Klik tombol untuk membuka foto bukti timbangan.
-    </p>
-
+                        <p class="mb-2"><strong>Bukti Timbangan:</strong></p>
+                        <button type="button" class="btn btn-outline-success rounded-pill px-4 py-2" 
+                                data-bs-toggle="modal" data-bs-target="#scaleProofModal">
+                            <i class="fas fa-eye me-2"></i>Lihat Bukti Timbangan
+                        </button>
                     @else
                         <div class="alert alert-secondary mb-0 rounded-3">
                             Bukti timbangan belum tersedia.
@@ -218,6 +210,7 @@
             </div>
 
             <!-- Service Information -->
+            @if($order->service)
             <div class="card mt-4">
                 <div class="card-header">
                     <h5 class="mb-0">
@@ -227,10 +220,11 @@
                 <div class="card-body">
                     <h6 class="fw-bold">{{ $order->service->name }}</h6>
                     <p class="text-muted">{{ $order->service->description }}</p>
-                    <p><strong>Price:</strong> Rp {{ number_format($order->service->price_per_kg, 0, ',', '.') }}/kg</p>
+                    <p><strong>Price:</strong> Rp {{ number_format($order->service->price_per_kg, 0, ',', '.') }}/{{ $order->service->unit }}</p>
                     <p><strong>Estimated Time:</strong> {{ $order->service->estimated_days }} day(s)</p>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>
@@ -254,7 +248,163 @@
 .timeline-content {
     flex: 1;
 }
+
+/* Modal Image Styles */
+.proof-image-container {
+    text-align: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.proof-image {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+.proof-image.zoomed {
+    cursor: zoom-out;
+    transform: scale(1.5);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-footer {
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Status Badge Styles */
+.badge.status-waiting-for-pickup {
+    background: linear-gradient(135deg, #FFC107, #FFB300) !important;
+    color: #212529 !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge.status-picked-and-weighed {
+    background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge.status-waiting-for-payment {
+    background: linear-gradient(135deg, #FF9800, #F57C00) !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge.status-waiting-for-admin-verification {
+    background: linear-gradient(135deg, #9C27B0, #7B1FA2) !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge.status-processed {
+    background: linear-gradient(135deg, #3F51B5, #303F9F) !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge.status-completed {
+    background: linear-gradient(135deg, #009688, #00796B) !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+}
 </style>
+
+<!-- Payment Proof Modal -->
+@if($order->payment_proof)
+<div class="modal fade" id="paymentProofModal" tabindex="-1" aria-labelledby="paymentProofModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="paymentProofModalLabel">
+                    <i class="fas fa-file-invoice-dollar me-2"></i>Bukti Pembayaran
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="proof-image-container">
+                    <img src="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" 
+                         alt="Bukti Pembayaran" 
+                         class="proof-image"
+                         onclick="this.classList.toggle('zoomed')">
+                </div>
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>Klik gambar untuk zoom in/out
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" 
+                   target="_blank" class="btn btn-outline-primary">
+                    <i class="fas fa-external-link-alt me-1"></i>Buka di Tab Baru
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- Scale Proof Modal -->
+@if($order->view_proof)
+<div class="modal fade" id="scaleProofModal" tabindex="-1" aria-labelledby="scaleProofModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="scaleProofModalLabel">
+                    <i class="fas fa-weight-hanging me-2"></i>Bukti Timbangan
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="proof-image-container">
+                    <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" 
+                         alt="Bukti Timbangan" 
+                         class="proof-image"
+                         onclick="this.classList.toggle('zoomed')">
+                </div>
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>Klik gambar untuk zoom in/out
+                    </small>
+                </div>
+                @if($order->weight)
+                <div class="alert alert-light border mt-3 mb-0 text-center">
+                    <strong>Berat Tercatat:</strong> {{ $order->weight }} kg
+                </div>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" 
+                   target="_blank" class="btn btn-outline-success">
+                    <i class="fas fa-external-link-alt me-1"></i>Buka di Tab Baru
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @section('scripts')

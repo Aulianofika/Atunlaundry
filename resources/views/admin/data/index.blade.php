@@ -149,7 +149,7 @@
                                     <tr>
                                         <td><strong>{{ $order->order_code }}</strong></td>
                                         <td>{{ $order->customer_name }}</td>
-                                        <td>{{ $order->service->name }}</td>
+                                        <td>{{ $order->service->name ?? 'Layanan tidak tersedia' }}</td>
                                         <!-- Status Soft -->
                                         <td>
                                             @php

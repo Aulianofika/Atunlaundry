@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1200, initial-scale=0.3, minimum-scale=0.3">
     <title>@yield('title', 'Atun Laundry') - Layanan Laundry Profesional</title>
     <meta name="description" content="Layanan laundry profesional dengan antar jemput. Cuci, kering, dan setrika berkualitas untuk kenyamanan Anda.">
     
@@ -285,35 +285,51 @@
         }
 
         /* Status Badges Enhancement */
-        .status-waiting { 
-            background: linear-gradient(45deg, #FFF3CD, #FFE69C); 
-            color: #856404; 
-            border: 1px solid #FFE69C;
+        .status-waiting, 
+        .status-waiting-for-pickup { 
+            background: linear-gradient(135deg, #FFC107, #FFB300) !important; 
+            color: #212529 !important; 
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
         }
-        .status-picked { 
-            background: linear-gradient(45deg, #D1ECF1, #B8DAFF); 
-            color: #0C5460; 
-            border: 1px solid #B8DAFF;
+        .status-picked,
+        .status-picked-and-weighed { 
+            background: linear-gradient(135deg, #2196F3, #1976D2) !important; 
+            color: #fff !important; 
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
         }
-        .status-payment { 
-            background: linear-gradient(45deg, #F8D7DA, #FFB3BA); 
-            color: #721C24; 
-            border: 1px solid #FFB3BA;
+        .status-payment,
+        .status-waiting-for-payment { 
+            background: linear-gradient(135deg, #FF9800, #F57C00) !important; 
+            color: #fff !important; 
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
         }
-        .status-verification { 
-            background: linear-gradient(45deg, #D4EDDA, #C3E6CB); 
-            color: #155724; 
-            border: 1px solid #C3E6CB;
+        .status-verification,
+        .status-waiting-for-admin-verification { 
+            background: linear-gradient(135deg, #9C27B0, #7B1FA2) !important; 
+            color: #fff !important; 
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
         }
         .status-processed { 
-            background: linear-gradient(45deg, #E2E3E5, #D6D8DB); 
-            color: #383D41; 
-            border: 1px solid #D6D8DB;
+            background: linear-gradient(135deg, #3F51B5, #303F9F) !important; 
+            color: #fff !important; 
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
         }
         .status-completed { 
-            background: linear-gradient(45deg, #D1ECF1, #B8DAFF); 
-            color: #0C5460; 
-            border: 1px solid #B8DAFF;
+            background: linear-gradient(135deg, #009688, #00796B) !important; 
+            color: #fff !important; 
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
         }
     </style>
     
@@ -341,6 +357,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('orders.check') }}">
                             <i class="fas fa-search me-1"></i>Cek Pesanan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('terms') }}">
+                            <i class="fas fa-file-alt me-1"></i>Syarat & Ketentuan
                         </a>
                     </li>
                     @auth
@@ -430,27 +451,34 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-sparkles me-2 text-warning"></i>Atun Laundry</h5>
-                    <p>Layanan laundry profesional dengan antar jemput. Cuci, kering, dan setrika berkualitas untuk kenyamanan Anda.</p>
+                    <h5><i class="fas fa-tshirt me-2"></i>Atun Laundry</h5>
+                    <p>Layanan laundry profesional dengan kualitas terbaik. Kami berkomitmen memberikan kebersihan dan kerapian pakaian Anda dengan harga terjangkau.</p>
+                    <p><strong>Kerapihan Anda Tanggung Jawab Kami!</strong></p>
                 </div>
                 <div class="col-md-4">
                     <h5><i class="fas fa-address-book me-2"></i>Informasi Kontak</h5>
-                    <p class="contact-item"><i class="fas fa-phone me-2"></i>+62 812-3456-7890</p>
-                    <p class="contact-item"><i class="fas fa-envelope me-2"></i>info@atunlaundry.com</p>
-                    <p class="contact-item"><i class="fas fa-map-marker-alt me-2"></i>Kota Anda, Indonesia</p>
+                    <p class="contact-item">
+                        <i class="fab fa-whatsapp me-2"></i>
+                        <a href="https://wa.me/6281275667418" target="_blank">0812-7566-7418</a>
+                    </p>
+                    <p class="contact-item"><i class="fas fa-map-marker-alt me-2"></i>Jl. Beringin, Padang Tiakar, Payakumbuh</p>
+                    <p class="contact-item"><i class="fas fa-clock me-2"></i>Buka: 08.00 - 21.00 WIB</p>
                 </div>
                 <div class="col-md-4">
                     <h5><i class="fas fa-map-marked-alt me-2"></i>Lokasi Kami</h5>
                     <div class="map-responsive rounded">
-                        <!-- Replace the src with your Google Maps embed URL or change coordinates -->
-                        <iframe src="https://www.google.com/maps?q=-6.200000,106.816666&hl=es;z=14&output=embed" width="600" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe src="https://www.google.com/maps?q=Padang+Tiakar+Payakumbuh&hl=id&z=15&output=embed" width="600" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
-                    <small class="text-white-50 d-block mt-2">Klik peta untuk membuka di Google Maps. Ganti koordinat di template jika perlu.</small>
+                    <small class="d-block mt-2">
+                        <a href="https://maps.google.com/?q=Padang+Tiakar+Payakumbuh" target="_blank" class="text-decoration-none">
+                            <i class="fas fa-external-link-alt me-1"></i>Buka di Google Maps
+                        </a>
+                    </small>
                 </div>
             </div>
             <hr class="my-4">
             <div class="text-center">
-                <p>&copy; {{ date('Y') }} Atun Laundry. Semua hak dilindungi.</p>
+                <p class="mb-0">&copy; {{ date('Y') }} Atun Laundry. Semua hak dilindungi.</p>
             </div>
         </div>
     </footer>

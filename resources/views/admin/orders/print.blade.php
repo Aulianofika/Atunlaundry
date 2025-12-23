@@ -39,7 +39,7 @@
                         <tr><td>{{ $item->name }} ({{ $item->quantity }} {{ $item->unit ?? '' }})</td><td style="text-align:right">Rp {{ number_format($item->price,0,',','.') }}</td></tr>
                     @endforeach
                 @else
-                    <tr><td>{{ $order->service->name }} {{ $order->weight ? '('.$order->weight.' KG)' : '' }}</td><td style="text-align:right">Rp {{ number_format($order->price ?? 0,0,',','.') }}</td></tr>
+                    <tr><td>{{ $order->service->name ?? 'Layanan' }} {{ $order->weight ? '('.$order->weight.' KG)' : '' }}</td><td style="text-align:right">Rp {{ number_format($order->price ?? 0,0,',','.') }}</td></tr>
                 @endif
             </tbody>
         </table>

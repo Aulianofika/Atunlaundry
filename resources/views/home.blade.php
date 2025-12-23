@@ -5,6 +5,34 @@
 @section('content')
 @section('styles')
 <style>
+/* Hero Section with Background Image */
+.hero-section {
+    background-image: url('{{ asset('storage/background/background.jpg') }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 245, 0.85) 50%, rgba(255, 255, 255, 0.8) 100%);
+    z-index: 1;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
 /* Hero tweaks */
 .hero-section .display-4 {
     font-weight: 800;
@@ -14,50 +42,57 @@
     max-width: 520px;
 }
 
-/* Services cards polishing */
+/* Services cards polishing - smaller cards */
 .service-card .card-body {
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 1rem 1.2rem;
 }
 .service-icon {
-    width: 84px;
-    height: 84px;
+    width: 50px;
+    height: 50px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 18px;
-    margin: 0 auto 16px auto;
+    border-radius: 12px;
+    margin: 0 auto 8px auto;
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
 }
-.service-icon i { font-size: 34px !important; }
+.service-icon i { font-size: 22px !important; color: #2E7D32; }
 
-.service-card .card-title { margin-top: 6px; margin-bottom: 6px; }
-.service-card .card-text { margin-bottom: 12px; color: #A8D8C9; }
+.service-card .card-title { margin-top: 4px; margin-bottom: 4px; font-size: 0.95rem; }
+.service-card .card-text { margin-bottom: 8px; color: #A8D8C9; font-size: 0.8rem; }
 .service-card .service-footer { 
     margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 0.85rem;
 }
-.service-price { color: #ded300ff; font-weight: 700; }
-.service-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(139,95,191,0.12); }
+.service-price { color: #2E7D32; font-weight: 700; }
+.service-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(46,125,50,0.12); }
+.service-card { min-height: auto; }
 
 @media (max-width: 767px) {
-    .hero-section { padding: 40px 0; }
-    .service-icon { width: 64px; height: 64px; }
+    .hero-section { 
+        padding: 40px 0; 
+        min-height: 400px;
+    }
+    .service-icon { width: 40px; height: 40px; }
+    .service-icon i { font-size: 18px !important; }
 }
 </style>
 @endsection
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 text-center">
                 <h1 class="display-4 fw-bold mb-4">
-                    Layanan Laundry Profesional
+                    Layanan Laundry Atun
                 </h1>
-                <p class="lead mb-4">Cuci, kering, dan setrika berkualitas dengan layanan antar jemput yang nyaman. Pakaian Anda layak mendapat perawatan terbaik!</p>
-                <div class="d-flex gap-3">
+                <p class="lead mb-4 mx-auto" style="max-width: 600px;">Kerapihan Anda Tanggung Jawab Kami!</p>
+                <div class="d-flex gap-3 justify-content-center">
                     @auth
                         <a href="{{ route('orders.create') }}" class="btn btn-primary btn-lg">
                             <i class="fas fa-plus-circle me-2"></i>Pesan Sekarang
@@ -72,14 +107,6 @@
                     </a>
                 </div>
             </div>
-            <!-- <div class="col-lg-6 text-center">
-                <div class="hero-icon-container">
-                    <i class="fas fa-tshirt hero-main-icon"></i>
-                    <div class="floating-icons">
-                        
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
 </section>
@@ -98,35 +125,37 @@
         
         <div class="row g-4">
             @foreach($services as $service)
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-4 col-6">
                 <div class="card service-card h-100">
-                    <div class="card-body text-center p-4">
+                    <div class="card-body text-center">
                         <div class="service-icon">
-                            @switch($service->name)
-                                @case('Regular Laundry')
-                                    <i class="fas fa-tshirt text-primary"></i>
-                                    @break
-                                @case('Express Laundry')
-                                    <i class="fas fa-bolt text-warning"></i>
-                                    @break
-                                @case('Ironing Only')
-                                    <i class="fas fa-iron text-info"></i>
-                                    @break
-                                @case('Dry Clean')
-                                    <i class="fas fa-gem text-success"></i>
-                                    @break
-                                @case('Wash & Iron')
-                                    <i class="fas fa-sparkles text-purple"></i>
-                                    @break
-                                @default
-                                    <i class="fas fa-tshirt text-primary"></i>
-                            @endswitch
+                            @if(str_contains(strtolower($service->name), 'selimut'))
+                                <i class="fas fa-cloud"></i>
+                            @elseif(str_contains(strtolower($service->name), 'bed cover'))
+                                <i class="fas fa-bed"></i>
+                            @elseif(str_contains(strtolower($service->name), 'seprei'))
+                                <i class="fas fa-layer-group"></i>
+                            @elseif(str_contains(strtolower($service->name), 'gorden'))
+                                <i class="fas fa-window-maximize"></i>
+                            @elseif(str_contains(strtolower($service->name), 'handuk'))
+                                <i class="fas fa-bath"></i>
+                            @elseif(str_contains(strtolower($service->name), 'setrika'))
+                                <i class="fas fa-fire-alt"></i>
+                            @elseif(str_contains(strtolower($service->name), 'cuci'))
+                                <i class="fas fa-water"></i>
+                            @elseif(str_contains(strtolower($service->name), 'jaket'))
+                                <i class="fas fa-user-tie"></i>
+                            @elseif(str_contains(strtolower($service->name), 'family'))
+                                <i class="fas fa-users"></i>
+                            @else
+                                <i class="fas fa-tshirt"></i>
+                            @endif
                         </div>
                         <h5 class="card-title fw-bold">{{ $service->name }}</h5>
                         <p class="card-text">{{ $service->description }}</p>
                         <div class="service-footer">
                             <span class="service-price">
-                                <i class="fas fa-tag me-1"></i>Rp {{ number_format($service->price_per_kg, 0, ',', '.') }}/kg
+                                <i class="fas fa-tag me-1"></i>Rp {{ number_format($service->price_per_kg, 0, ',', '.') }}/{{ $service->unit }}
                             </span>
                             <small class="text-muted">
                                 <i class="fas fa-clock me-1"></i>{{ $service->estimated_days }} hari

@@ -25,6 +25,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Order status check (public)
 Route::get('/check-order', [OrderController::class, 'checkStatus'])->name('orders.check');
 
+// Terms and conditions page (public)
+Route::get('/syarat-ketentuan', function () {
+    return view('terms');
+})->name('terms');
+
 // Protected routes
 Route::middleware('auth')->group(function () {
     // CRUD RESOURCE ROUTES
@@ -63,6 +68,7 @@ Route::middleware('auth')->group(function () {
 
         // Salary routes
         Route::resource('salaries', SalaryController::class, ['except' => ['show']]);
+        Route::get('salaries/monthly-kg', [SalaryController::class, 'getMonthlyKg'])->name('salaries.monthly-kg');
         
         // Admin Data routes (Atun only)
         Route::prefix('data')->name('data.')->group(function () {
@@ -72,5 +78,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/promotions', [App\Http\Controllers\AdminDataController::class, 'promotions'])->name('promotions');
             Route::get('/reports', [App\Http\Controllers\AdminDataController::class, 'reports'])->name('reports');
         });
+
+        // Customer management routes
+        Route::put('/customers/{user}', [AdminController::class, 'updateCustomer'])->name('customers.update');
+        Route::delete('/customers/{user}', [AdminController::class, 'destroyCustomer'])->name('customers.destroy');
     });
 });

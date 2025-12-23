@@ -34,7 +34,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <h6 class="fw-bold">Detail Layanan</h6>
-                                <p class="mb-1"><strong>Service:</strong> {{ $order->service->name }}</p>
+                                <p class="mb-1"><strong>Service:</strong> {{ $order->service->name ?? 'Layanan tidak tersedia' }}</p>
                                 <p class="mb-1"><strong>Pickup:</strong> {{ ucfirst($order->pickup_method) }}</p>
                                 @if($order->weight)
                                     <p class="mb-1"><strong>Weight:</strong> {{ $order->weight }} kg</p>

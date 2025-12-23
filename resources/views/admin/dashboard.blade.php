@@ -83,7 +83,7 @@
                         <tr>
                             <td class="fw-semibold">{{ $order->order_code }}</td>
                             <td>{{ $order->customer_name }}</td>
-                            <td>{{ $order->service->name }}</td>
+                            <td>{{ $order->service->name ?? 'Layanan tidak tersedia' }}</td>
                             <td>
                                 @php
                                     $statusClass = match($order->status) {
@@ -127,7 +127,7 @@
 
 <!-- Daftar Pelanggan -->
 <div class="card border-0 shadow-sm rounded-4 mb-5">
-    <div class="card-header bg-white border-0">
+    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
         <h5 class="fw-semibold mb-0 text-purple">
             Daftar Pelanggan
         </h5>
@@ -141,6 +141,7 @@
                             <th>Nama</th>
                             <th>Kontak</th>
                             <th>Tipe</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -152,6 +153,32 @@
                                 <span class="badge rounded-pill {{ $customer->type === 'Online' ? 'bg-light text-primary border' : 'bg-light text-secondary border' }}">
                                     {{ $customer->type }}
                                 </span>
+                            </td>
+                            <td class="text-center">
+                                @if($customer->is_user && $customer->id)
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <!-- Edit Button -->
+                                    <button type="button" class="btn btn-outline-primary btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editCustomerModal{{ $customer->id }}"
+                                            title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <!-- Delete Button -->
+                                    <form action="{{ route('admin.customers.destroy', $customer->id) }}" 
+                                          method="POST" 
+                                          class="d-inline"
+                                          onsubmit="return confirm('Yakin ingin menghapus pelanggan {{ $customer->name }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                @else
+                                <span class="text-muted small">-</span>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -167,6 +194,50 @@
         @endif
     </div>
 </div>
+
+<!-- Edit Customer Modals -->
+@if(isset($customers) && $customers->count() > 0)
+    @foreach($customers as $customer)
+        @if($customer->is_user && $customer->id)
+        <div class="modal fade" id="editCustomerModal{{ $customer->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4">
+                    <div class="modal-header text-white rounded-top-4" style="background: linear-gradient(135deg, #2E7D32, #1B5E20);">
+                        <h5 class="modal-title">
+                            <i class="fas fa-user-edit me-2"></i>Edit Pelanggan
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form action="{{ route('admin.customers.update', $customer->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Nama</label>
+                                <input type="text" name="name" class="form-control" value="{{ $customer->name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" value="{{ $customer->contact }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Telepon</label>
+                                <input type="text" name="phone" class="form-control" value="{{ $customer->phone ?? '' }}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @endif
+    @endforeach
+@endif
 
 <!-- Aksi Cepat -->
 <div class="card border-0 shadow-sm rounded-4">

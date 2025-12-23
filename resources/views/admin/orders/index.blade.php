@@ -86,7 +86,7 @@
                                 <div class="fw-semibold text-dark">{{ $order->customer_name }}</div>
                                 <div class="text-muted small">{{ $order->customer_phone }}</div>
                             </td>
-                            <td>{{ $order->service->name }}</td>
+                            <td>{{ $order->service->name ?? 'Layanan tidak tersedia' }}</td>
                             
                             <!-- Status Soft -->
                             <td>

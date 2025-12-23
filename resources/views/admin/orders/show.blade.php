@@ -91,9 +91,18 @@
                       <div id="viewPreview" class="mb-3 {{ $order->view_proof ? '' : 'd-none' }}">
                             @if($order->view_proof)
                                 <div class="mb-2">Pratinjau saat ini:</div>
-                                <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" alt="Bukti Timbangan" style="max-width:200px;" class="img-thumbnail">
+                                <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" 
+                                     alt="Bukti Timbangan" 
+                                     style="max-width:200px; cursor:pointer;" 
+                                     class="img-thumbnail"
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#adminScaleProofModal"
+                                     title="Klik untuk memperbesar">
                                 <div class="mt-2">
-                                    <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm me-2">Lihat Gambar</a>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-2" 
+                                            data-bs-toggle="modal" data-bs-target="#adminScaleProofModal">
+                                        <i class="fas fa-search-plus me-1"></i>Lihat Detail
+                                    </button>
                                     <button type="button" id="changeViewBtn" class="btn btn-outline-secondary btn-sm">Ganti Gambar</button>
                                 </div>
                             @endif
@@ -115,11 +124,20 @@
                         @if($order->payment_proof)
                             <div class="mb-3">
                                 <p class="mb-1"><strong>Berkas:</strong></p>
-                                <img src="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" alt="Bukti Pembayaran" class="img-thumbnail" style="max-width:300px;" />
+                                <img src="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" 
+                                     alt="Bukti Pembayaran" 
+                                     class="img-thumbnail" 
+                                     style="max-width:200px; cursor:pointer;" 
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#adminPaymentProofModal"
+                                     title="Klik untuk memperbesar" />
                             </div>
 
-                            <div class="d-flex gap-2">
-                                <a href="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm">Lihat Gambar</a>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button type="button" class="btn btn-outline-primary btn-sm" 
+                                        data-bs-toggle="modal" data-bs-target="#adminPaymentProofModal">
+                                    <i class="fas fa-search-plus me-1"></i>Lihat Detail
+                                </button>
 
                                 @if(!$order->payment_verified)
                                     <form action="{{ route('admin.orders.verify-payment', $order) }}" method="POST" class="d-inline">
@@ -168,13 +186,106 @@
                     <hr>
 
                     <h6 class="fw-semibold">Informasi Service</h6>
-                    <p class="mb-1"><strong>{{ $order->service->name }}</strong></p>
+                    <p class="mb-1"><strong>{{ $order->service->name ?? 'Layanan tidak tersedia' }}</strong></p>
                     <p class="text-muted mb-0">Rp {{ number_format($order->service->price_per_kg ?? 0, 0, ',', '.') }} / satuan</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Admin Scale Proof Modal -->
+@if($order->view_proof)
+<div class="modal fade" id="adminScaleProofModal" tabindex="-1" aria-labelledby="adminScaleProofModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #43a047, #2e7d32);">
+                <h5 class="modal-title text-white" id="adminScaleProofModalLabel">
+                    <i class="fas fa-weight-hanging me-2"></i>Bukti Timbangan
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center" style="background: #f8f9fa;">
+                <img src="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" 
+                     alt="Bukti Timbangan" 
+                     class="img-fluid rounded shadow"
+                     style="max-height: 70vh; cursor: zoom-in;"
+                     onclick="this.classList.toggle('zoomed-img')">
+                <div class="mt-3">
+                    <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Klik gambar untuk zoom</small>
+                </div>
+                @if($order->weight)
+                <div class="alert alert-light border mt-3 mb-0">
+                    <strong>Berat Tercatat:</strong> {{ $order->weight }} kg
+                </div>
+                @endif
+            </div>
+            <div class="modal-footer">
+                <a href="{{ asset('storage/scale_proofs/' . $order->view_proof) }}" target="_blank" class="btn btn-outline-success">
+                    <i class="fas fa-external-link-alt me-1"></i>Buka Tab Baru
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- Admin Payment Proof Modal -->
+@if($order->payment_proof)
+<div class="modal fade" id="adminPaymentProofModal" tabindex="-1" aria-labelledby="adminPaymentProofModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #1976d2, #1565c0);">
+                <h5 class="modal-title text-white" id="adminPaymentProofModalLabel">
+                    <i class="fas fa-file-invoice-dollar me-2"></i>Bukti Pembayaran
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center" style="background: #f8f9fa;">
+                <img src="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" 
+                     alt="Bukti Pembayaran" 
+                     class="img-fluid rounded shadow"
+                     style="max-height: 70vh; cursor: zoom-in;"
+                     onclick="this.classList.toggle('zoomed-img')">
+                <div class="mt-3">
+                    <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Klik gambar untuk zoom</small>
+                </div>
+                <div class="alert alert-light border mt-3 mb-0">
+                    <strong>Status:</strong> 
+                    @if($order->payment_verified)
+                        <span class="badge bg-success">Terverifikasi</span>
+                    @else
+                        <span class="badge bg-warning">Menunggu Verifikasi</span>
+                    @endif
+                </div>
+            </div>
+            <div class="modal-footer">
+                @if(!$order->payment_verified)
+                <form action="{{ route('admin.orders.verify-payment', $order) }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" class="btn btn-success" onclick="return confirm('Verifikasi pembayaran ini?')">
+                        <i class="fas fa-check me-1"></i>Verifikasi
+                    </button>
+                </form>
+                @endif
+                <a href="{{ asset('storage/payment_proofs/' . $order->payment_proof) }}" target="_blank" class="btn btn-outline-primary">
+                    <i class="fas fa-external-link-alt me-1"></i>Buka Tab Baru
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<style>
+.zoomed-img {
+    transform: scale(1.5);
+    cursor: zoom-out !important;
+    transition: transform 0.3s ease;
+}
+</style>
 @endsection
 
 @section('scripts')
