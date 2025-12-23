@@ -448,22 +448,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Service selection interactions
-    const serviceItems = document.querySelectorAll('.service-item');
+    const serviceCards = document.querySelectorAll('.service-card-item');
     const resetBtn = document.getElementById('resetServicesBtn');
     const servicesForm = document.getElementById('servicesForm');
 
-    serviceItems.forEach(item => {
-        item.addEventListener('click', function(e) {
+    serviceCards.forEach(card => {
+        card.addEventListener('click', function(e) {
             // If click was on the checkbox, let it handle itself
             if (e.target.classList.contains('service-checkbox')) return;
             const checkbox = this.querySelector('.service-checkbox');
-            if (checkbox) checkbox.checked = !checkbox.checked;
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                this.classList.toggle('selected', checkbox.checked);
+            }
         });
     });
 
     if (resetBtn) {
         resetBtn.addEventListener('click', function() {
             document.querySelectorAll('.service-checkbox').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.service-card-item').forEach(card => card.classList.remove('selected'));
         });
     }
 
