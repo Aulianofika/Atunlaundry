@@ -21,6 +21,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'resetPasswordDirectly'])->name('password.direct.reset');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 // Order status check (public)
 Route::get('/check-order', [OrderController::class, 'checkStatus'])->name('orders.check');

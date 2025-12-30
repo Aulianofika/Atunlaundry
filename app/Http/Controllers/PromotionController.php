@@ -21,7 +21,7 @@ class PromotionController extends Controller
         $this->checkAdmin();
 
         $promotions = Promotion::orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.promo.index', compact('promotions'));
+        return view('admin.promotions.index', compact('promotions'));
     }
 
     /** Form tambah promosi */
@@ -29,7 +29,7 @@ class PromotionController extends Controller
     {
         $this->checkAdmin();
 
-        return view('admin.promo.create');
+        return view('admin.promotions.create');
     }
 
     /** Simpan promosi baru */
@@ -57,7 +57,7 @@ class PromotionController extends Controller
     {
         $this->checkAdmin();
 
-        return view('admin.promo.edit', compact('promotion'));
+        return view('admin.promotions.edit', compact('promotion'));
     }
 
     /** Update promosi */

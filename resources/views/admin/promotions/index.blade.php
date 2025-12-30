@@ -27,7 +27,7 @@
                             <th>Judul</th>
                             <th style="min-width:320px;">Deskripsi</th>
                             <th>Diskon (%)</th>
-                            <th>Nominal</th>
+
                             <th>Periode</th>
                             <th>Status</th>
                             <th class="text-center">Aksi</th>
@@ -41,7 +41,7 @@
                                     <div class="text-muted small text-truncate" style="max-width:360px;">{{ $promo->description }}</div>
                                 </td>
                                 <td>{{ $promo->discount_percentage ?? '-' }}</td>
-                                <td>Rp {{ number_format($promo->discount_amount ?? 0, 0, ',', '.') }}</td>
+
                                 <td class="small text-muted">{{ $promo->start_date }}<br>— {{ $promo->end_date }}</td>
                                 <td>
                                     @if($promo->is_active)
@@ -69,7 +69,7 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7" class="text-center text-muted py-4">
+                            <tr><td colspan="6" class="text-center text-muted py-4">
                                 <div class="mb-3">Belum ada promosi</div>
                                 <a href="{{ route('promotions.create') }}" class="btn btn-gradient">Tambah Promosi</a>
                             </td></tr>

@@ -125,7 +125,7 @@ class AdminDataController extends Controller
         $promotions = Promotion::orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('admin.promo.index', compact('promotions'));
+        return view('admin.promotions.index', compact('promotions'));
     }
 
     public function reports()

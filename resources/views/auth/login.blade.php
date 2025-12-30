@@ -60,6 +60,16 @@
                                 <i class="fas fa-arrow-right-to-bracket me-2"></i>Masuk
                             </button>
                         </div>
+
+                        <div class="text-center my-3">
+                            <span class="text-muted">Atau</span>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <a href="{{ route('auth.google') }}" class="btn btn-outline-danger btn-lg">
+                                <i class="fab fa-google me-2"></i>Masuk dengan Google
+                            </a>
+                        </div>
                     </form>
 
                     <div class="text-center">

@@ -32,10 +32,7 @@
                         <label class="form-label fw-semibold">Diskon (%)</label>
                         <input type="number" step="0.01" name="discount_percentage" value="{{ old('discount_percentage', $promotion->discount_percentage) }}" class="form-control">
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Nominal Diskon (Rp)</label>
-                        <input type="number" step="0.01" name="discount_amount" value="{{ old('discount_amount', $promotion->discount_amount) }}" class="form-control">
-                    </div>
+
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Tanggal Mulai</label>
