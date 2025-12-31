@@ -548,34 +548,53 @@
         <h1 class="page-title mb-0">@yield('page-title', 'Dashboard Admin')</h1>
     </div>
 
-    <div class="topbar-right dropdown">
-        <button class="btn d-flex align-items-center user-info dropdown-toggle border-0 bg-transparent shadow-none"
-                type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-            <div class="user-avatar me-2">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </div>
-            <div class="text-start d-none d-md-block">
-                <div class="fw-semibold">{{ Auth::user()->name }}</div>
-                <small class="text-muted">Administrator</small>
-            </div>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2 mt-2"
-            aria-labelledby="userMenuButton">
-            <li>
-                <a class="dropdown-item rounded-3 py-2" href="#">
-                    <i class="fas fa-user me-2 text-purple"></i>Profil
-                </a>
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="dropdown-item rounded-3 py-2 text-danger">
-                        <i class="fas fa-sign-out-alt me-2"></i>Keluar
-                    </button>
-                </form>
-            </li>
-        </ul>
+    <div class="topbar-right d-flex align-items-center">
+        <!-- Notification Dropdown -->
+        <div class="dropdown me-3">
+            <button class="btn position-relative" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-bell fa-lg text-secondary"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="notificationBadge">
+                    0
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="notificationDropdown" style="width: 320px; max-height: 400px; overflow-y: auto;" id="notificationList">
+                <li><h6 class="dropdown-header fw-bold text-dark">Notifikasi</h6></li>
+                <li><hr class="dropdown-divider"></li>
+                <li id="noNotifications" class="text-center p-3 text-muted small">Tidak ada notifikasi baru</li>
+            </ul>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="dropdown">
+            <button class="btn d-flex align-items-center user-info dropdown-toggle border-0 bg-transparent shadow-none"
+                    type="button" id="userMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="user-avatar me-2">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                </div>
+                <div class="text-start d-none d-md-block">
+                    <div class="fw-semibold">{{ Auth::user()->name }}</div>
+                    <small class="text-muted">Administrator</small>
+                </div>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2 mt-2"
+                aria-labelledby="userMenuButton">
+                <li>
+                    <a class="dropdown-item rounded-3 py-2" href="#">
+                        <i class="fas fa-user me-2 text-purple"></i>Profil
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="dropdown-item rounded-3 py-2 text-danger">
+                            <i class="fas fa-sign-out-alt me-2"></i>Keluar
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -620,6 +639,80 @@
                     sidebar.classList.toggle('show');
                 });
             }
+
+            // --- Notification Polling System ---
+            const notificationBadge = document.getElementById('notificationBadge');
+            const notificationList = document.getElementById('notificationList');
+            const noNotifications = document.getElementById('noNotifications');
+            let hasPlayedSound = false;
+
+            function fetchNotifications() {
+                fetch("{{ route('admin.notifications.check') }}")
+                    .then(response => response.json())
+                    .then(data => {
+                        const count = data.length;
+                        
+                        // Update badge
+                        if (count > 0) {
+                            notificationBadge.textContent = count;
+                            notificationBadge.classList.remove('d-none');
+                            noNotifications.style.display = 'none';
+                            
+                            // Play sound if new notification (simple check based on count increase or just exist)
+                            // Ideally track IDs to play only on new. For now, simple logic.
+                        } else {
+                            notificationBadge.classList.add('d-none');
+                            noNotifications.style.display = 'block';
+                            // Clear list except header and no-notif item
+                            // We will rebuild list below
+                        }
+
+                        // Rebuild list
+                        // Keep the fixed header items (first 2 children: header and divider)
+                        const items = Array.from(notificationList.children);
+                        const staticItems = items.slice(0, 2); 
+                        
+                        // Clear current dynamic items
+                        notificationList.innerHTML = '';
+                        staticItems.forEach(item => notificationList.appendChild(item));
+
+                        if (count === 0) {
+                             notificationList.appendChild(noNotifications);
+                        } else {
+                            data.forEach(notif => {
+                                const li = document.createElement('li');
+                                const link = document.createElement('a');
+                                link.className = 'dropdown-item p-3 border-bottom';
+                                link.href = notif.data.link || '#';
+                                link.innerHTML = `
+                                    <div class="fw-bold small text-primary mb-1">${notif.data.customer_name || 'Pelanggan'}</div>
+                                    <div class="small text-dark mb-1">${notif.data.message}</div>
+                                    <div class="text-muted" style="font-size: 0.75rem">${new Date(notif.created_at).toLocaleString()}</div>
+                                `;
+                                
+                                link.addEventListener('click', function(e) {
+                                    // Mark as read when clicked
+                                    fetch(`/admin/notifications/${notif.id}/read`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                            'Content-Type': 'application/json'
+                                        }
+                                    });
+                                });
+
+                                li.appendChild(link);
+                                notificationList.appendChild(li);
+                            });
+                        }
+                    })
+                    .catch(err => console.error('Notification check failed', err));
+            }
+
+            // Initial check
+            fetchNotifications();
+            // Poll every 5 seconds
+            setInterval(fetchNotifications, 5000);
         });
     </script>
     

@@ -53,6 +53,11 @@ Route::middleware('auth')->group(function () {
     // Admin routes
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        
+        // Notification routes
+        Route::get('/notifications/check', [AdminController::class, 'checkNotifications'])->name('notifications.check');
+        Route::post('/notifications/{id}/read', [AdminController::class, 'markNotificationAsRead'])->name('notifications.read');
+
         Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
         // Static admin order creation routes must come before the dynamic {order} route
         Route::get('/orders/create-manual', [AdminController::class, 'createManualOrder'])->name('orders.create-manual');

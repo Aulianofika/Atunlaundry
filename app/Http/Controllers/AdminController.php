@@ -331,4 +331,22 @@ class AdminController extends Controller
 
         return back()->with('success', 'Pelanggan berhasil dihapus.');
     }
+
+    public function checkNotifications()
+    {
+        $this->checkAdmin();
+        // Return unread notifications for the currently authenticated admin
+        $notifications = Auth::user()->unreadNotifications;
+        return response()->json($notifications);
+    }
+
+    public function markNotificationAsRead($id)
+    {
+        $this->checkAdmin();
+        $notification = Auth::user()->notifications()->where('id', $id)->first();
+        if ($notification) {
+            $notification->markAsRead();
+        }
+        return response()->json(['success' => true]);
+    }
 }

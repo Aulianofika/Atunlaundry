@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewOrderNotification;
+use App\Models\User;
+
 class OrderController extends Controller
 {
     public function index()
     {
         $orders = Order::with(['user', 'service'])
-            ->when(!Auth::user()?->is_admin, function($query) {
+            ->when(!Auth::user()?->isAdmin(), function($query) {
                 $query->where('user_id', Auth::id());
             })
             ->orderBy('created_at', 'desc')
@@ -37,110 +41,12 @@ class OrderController extends Controller
         return view('orders.create', compact('services'));
     }
 
-    /**
-     * Seed default services if database is empty.
-     */
-    private function seedDefaultServices()
-    {
-        Service::create([
-            'name' => 'Regular Laundry',
-            'description' => 'Wash, dry, and fold service',
-            'price_per_kg' => 8000,
-            'estimated_days' => 2,
-            'is_active' => true,
-        ]);
-        Service::create([
-            'name' => 'Express Laundry',
-            'description' => 'Same day service (within 6 hours)',
-            'price_per_kg' => 12000,
-            'estimated_days' => 1,
-            'is_active' => true,
-        ]);
-        Service::create([
-            'name' => 'Ironing Only',
-            'description' => 'Ironing service for clean clothes',
-            'price_per_kg' => 5000,
-            'estimated_days' => 1,
-            'is_active' => true,
-        ]);
-        Service::create([
-            'name' => 'Dry Clean',
-            'description' => 'Professional dry cleaning service',
-            'price_per_kg' => 15000,
-            'estimated_days' => 3,
-            'is_active' => true,
-        ]);
-        Service::create([
-            'name' => 'Wash & Iron',
-            'description' => 'Complete wash and iron service',
-            'price_per_kg' => 10000,
-            'estimated_days' => 2,
-            'is_active' => true,
-        ]);
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'service_id' => 'nullable|exists:services,id',
-            'service_ids' => 'nullable|array',
-            'service_ids.*' => 'nullable|exists:services,id',
-            'items_description' => 'nullable|string',
-            'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:20',
-            'customer_address' => 'required|string',
-            'pickup_method' => 'required|in:pickup,delivery',
-            'notes' => 'nullable|string',
-            'payment_proof' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $orderData = [
-            'order_code' => Order::generateOrderCode(),
-            'user_id' => Auth::id(),
-            'order_type' => 'login',
-            'customer_name' => $request->customer_name,
-            'customer_phone' => $request->customer_phone,
-            'customer_address' => $request->customer_address,
-            'pickup_method' => $request->pickup_method,
-            'notes' => $request->notes,
-        ];
-
-        // handle services: either single service_id or multiple service_ids
-        if ($request->filled('service_ids')) {
-            $ids = array_values(array_filter($request->input('service_ids')));
-            $orderData['service_ids'] = json_encode($ids);
-            // keep first as service_id for compatibility
-            $orderData['service_id'] = $ids[0] ?? null;
-        } elseif ($request->filled('service_id')) {
-            $orderData['service_id'] = $request->service_id;
-        }
-
-        // items description
-        if ($request->filled('items_description')) {
-            $orderData['items_description'] = $request->items_description;
-        }
-
-        $order = Order::create($orderData);
-
-        // Handle optional payment proof uploaded during order creation
-        if ($request->hasFile('payment_proof')) {
-            $file = $request->file('payment_proof');
-            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
-            $file->storeAs('payment_proofs', $filename, 'public');
-
-            $order->update([
-                'payment_proof' => $filename,
-                'status' => 'waiting_for_admin_verification'
-            ]);
-        }
-
-        return redirect()->route('orders.show', $order)
-            ->with('success', 'Order created successfully! Your order code is: ' . $order->order_code);
-    }
+// ...
 
     public function show(Order $order)
     {
-        if (!Auth::user()->is_admin && $order->user_id !== Auth::id()) {
+        // Use loose comparison != to avoid issues with string/int types
+        if (!Auth::user()->isAdmin() && $order->user_id != Auth::id()) {
             abort(403);
         }
 
