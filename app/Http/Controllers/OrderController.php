@@ -41,6 +41,48 @@ class OrderController extends Controller
         return view('orders.create', compact('services'));
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'service_ids' => 'required|array|min:1',
+            'service_ids.*' => 'exists:services,id',
+            'customer_name' => 'required|string|max:255',
+            'customer_phone' => 'required|string|max:20',
+            'pickup_method' => 'required|in:pickup,delivery',
+            'customer_address' => 'required|string',
+            'items_description' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+
+        $order = Order::create([
+            'order_code' => Order::generateOrderCode(),
+            'user_id' => Auth::id(),
+            'service_id' => $request->service_ids[0],
+            'service_ids' => $request->service_ids,
+            'customer_name' => $request->customer_name,
+            'customer_phone' => $request->customer_phone,
+            'customer_address' => $request->customer_address,
+            'pickup_method' => $request->pickup_method,
+            'items_description' => $request->items_description,
+            'notes' => $request->notes,
+            'status' => 'waiting_for_pickup',
+            'order_type' => 'login',
+        ]);
+
+        // Send notification to admins
+        try {
+            $admins = User::where('role', 'admin')->get();
+            if ($admins->count() > 0) {
+                Notification::send($admins, new NewOrderNotification($order));
+            }
+        } catch (\Exception $e) {
+            // Continue even if notification fails
+        }
+
+        return redirect()->route('orders.show', $order)
+            ->with('success', 'Pesanan berhasil dibuat! Mohon tunggu konfirmasi admin.');
+    }
+
 // ...
 
     public function show(Order $order)

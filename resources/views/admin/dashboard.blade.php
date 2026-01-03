@@ -156,14 +156,15 @@
                             </td>
                             <td class="text-center">
                                 @if($customer->is_user && $customer->id)
-                                <div class="btn-group btn-group-sm" role="group">
+                                <div class="d-flex justify-content-center gap-2">
                                     <!-- Edit Button -->
-                                    <button type="button" class="btn btn-outline-primary btn-sm" 
+                                    <button type="button" class="btn btn-primary btn-sm px-3" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#editCustomerModal{{ $customer->id }}"
                                             title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </button>
+                                    
                                     <!-- Delete Button -->
                                     <form action="{{ route('admin.customers.destroy', $customer->id) }}" 
                                           method="POST" 
@@ -171,7 +172,7 @@
                                           onsubmit="return confirm('Yakin ingin menghapus pelanggan {{ $customer->name }}?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus">
+                                        <button type="submit" class="btn btn-danger btn-sm px-3" title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
